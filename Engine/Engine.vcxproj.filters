@@ -1,0 +1,230 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Shader Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Shader Classes">
+      <UniqueIdentifier>{8edc608b-0748-4e47-9c0d-37116004b158}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Shader Classes">
+      <UniqueIdentifier>{a75a55f6-78d3-4e2a-a04e-b7e3e5487809}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Procedural">
+      <UniqueIdentifier>{19b3cb05-9a19-4a59-8be7-b080e4cfeeb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Procedural">
+      <UniqueIdentifier>{b8a6d2f2-5bdf-45d9-8b0a-e36f9d1c36c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Graphics">
+      <UniqueIdentifier>{eb07216e-3f2f-4f90-b028-521b07e13c4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Graphics">
+      <UniqueIdentifier>{19233868-3c20-4c48-ba8c-4adbffdef218}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="cameraclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="d3dclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="graphicsclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="inputclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="lightclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="systemclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="textureclass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="lightshaderclass.cpp">
+      <Filter>Source Files\Shader Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="particleshaderclass.cpp">
+      <Filter>Source Files\Shader Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="skydomeshaderclass.cpp">
+      <Filter>Source Files\Shader Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="terrainshaderclass.cpp">
+      <Filter>Source Files\Shader Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="PerlinNoise.cpp">
+      <Filter>Source Files\Procedural</Filter>
+    </ClCompile>
+    <ClCompile Include="terrainclass.cpp">
+      <Filter>Source Files\Procedural</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystemClass.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="SkySphere.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="FractalTree.cpp">
+      <Filter>Source Files\Procedural</Filter>
+    </ClCompile>
+    <ClCompile Include="GameObject.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="ResourceLoader.cpp">
+      <Filter>Source Files\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="LSystemRule.cpp">
+      <Filter>Source Files\Procedural</Filter>
+    </ClCompile>
+    <ClCompile Include="Line.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="colorshaderclass.cpp">
+      <Filter>Source Files\Shader Classes</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTexture.cpp">
+      <Filter>Source Files\Procedural</Filter>
+    </ClCompile>
+    <ClCompile Include="orthowindowclass.cpp">
+      <Filter>Source Files\Procedural</Filter>
+    </ClCompile>
+    <ClCompile Include="PostProcessingShader.cpp">
+      <Filter>Source Files\Shader Classes</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="cameraclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="graphicsclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inputclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lightclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="systemclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="textureclass.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Structs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="lightshaderclass.h">
+      <Filter>Header Files\Shader Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="particleshaderclass.h">
+      <Filter>Header Files\Shader Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="skydomeshaderclass.h">
+      <Filter>Header Files\Shader Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="terrainclass.h">
+      <Filter>Header Files\Procedural</Filter>
+    </ClInclude>
+    <ClInclude Include="PerlinNoise.h">
+      <Filter>Header Files\Procedural</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystemClass.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="SkySphere.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="FractalTree.h">
+      <Filter>Header Files\Procedural</Filter>
+    </ClInclude>
+    <ClInclude Include="GameObject.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceLoader.h">
+      <Filter>Header Files\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="LSystemHelpers.h">
+      <Filter>Header Files\Procedural</Filter>
+    </ClInclude>
+    <ClInclude Include="LSystemRule.h">
+      <Filter>Header Files\Procedural</Filter>
+    </ClInclude>
+    <ClInclude Include="Line.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="colorshaderclass.h">
+      <Filter>Header Files\Shader Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTexture.h">
+      <Filter>Header Files\Procedural</Filter>
+    </ClInclude>
+    <ClInclude Include="orthowindowclass.h">
+      <Filter>Header Files\Procedural</Filter>
+    </ClInclude>
+    <ClInclude Include="terrainshaderclass.h">
+      <Filter>Header Files\Shader Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="PostProcessingShader.h">
+      <Filter>Header Files\Shader Classes</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="lightVS.hlsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="lightPS.hlsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="particleVS.hlsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="particlePS.hlsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="skydomeVS.hlsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="skydomePS.hlsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="terrainVS.hlsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="terrainPS.hlsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="colorVS.hlsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="colorPS.hlsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="crtPS.hlsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="crtVS.hlsl">
+      <Filter>Shader Files</Filter>
+    </None>
+  </ItemGroup>
+</Project>
