@@ -52,6 +52,9 @@ public:
 	void SetVertexCount(int);
 	void SetIndexCount(int);
 
+	void SetPosition(XMVECTOR pos) { m_DebugPosition = pos; };
+	XMVECTOR GetPosition() { return m_DebugPosition; };
+
 protected:
 	virtual void drawCurrent(ID3D11DeviceContext*) const;
 
@@ -67,5 +70,6 @@ private:
 	std::vector<unsigned int> m_Indices;
 
 	XMMATRIX m_WorldMatrix;
+	XMVECTOR m_DebugPosition;
 	TextureClass* m_Texture;
 };

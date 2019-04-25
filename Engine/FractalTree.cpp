@@ -111,13 +111,14 @@ void FractalTree::Generate()
    	std::cout << "new sentence: " + m_CurrentSentence << std::endl;
 
 	//GenerateLines(m_CurrentSentence , m_StartPosition,  m_BranchLength,m_BranchAngle);
-	InterpretSystem(m_CurrentSentence,m_StartPosition, 0.75f, (25.7f * XM_PI) / 180);
+	InterpretSystem(m_CurrentSentence,m_StartPosition, 4.0f, (25.7f * XM_PI) / 180);
 }
 
 void FractalTree::InterpretSystem(std::string sentence, XMVECTOR startingPoint, float stepSize, float angleDelta)
 {
 	TurtleState curState, nextState;
-	curState.pos = startingPoint;
+	//curState.pos = startingPoint;
+	curState.pos = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 	curState.rotation = XMMatrixIdentity();
 	curState.stepSize = stepSize;
 	curState.radius = 1.0f;
@@ -131,6 +132,8 @@ void FractalTree::InterpretSystem(std::string sentence, XMVECTOR startingPoint, 
 	float origRad = curState.radius;		//radius branch
 	float origStepSize = curState.stepSize;	//length branch
 
+	CylinderShape cyl;
+	cyl.GenCylinder(origRad, origStepSize, 24);
 	
 	for (char c : sentence)
 	{
@@ -144,16 +147,9 @@ void FractalTree::InterpretSystem(std::string sentence, XMVECTOR startingPoint, 
 			nextState.pos = XMVectorAdd(nextState.pos, XMVectorScale(rotated, curState.stepSize));
 
 			
-			XMFLOAT3 vertPos;
-			XMStoreFloat3(&vertPos, curState.pos);
-			m_Vertices.push_back(vertPos);
-
-			XMStoreFloat3(&vertPos, nextState.pos);
-			m_Vertices.push_back(vertPos);
-
-			m_Indices.push_back(index);
-			index = m_Indices.size(); //can't add 1, what if we branched
-			m_Indices.push_back(index);
+			m_Models.push_back(new SimpleObject(cyl));
+			m_Models.back()->SetWorldMatrix(XMMatrixMultiply(XMMatrixMultiply(XMMatrixScaling(curState.radius / origRad, curState.stepSize / origStepSize, curState.radius / origRad), rotMatrix), XMMatrixTranslationFromVector(curState.pos)));
+			m_Models.back()->SetPosition(curState.pos);
 			
 			break;
 		}

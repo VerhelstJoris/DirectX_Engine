@@ -537,8 +537,8 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd, con
 	}
 
 	m_FractalTree->Generate();
-	m_FractalTree->SetDiffuseTexture(&m_ResourceLoader.GetTexture(TextureID::T_PIERPILLAR));
-	m_FractalTree->SetNormalTexture(&m_ResourceLoader.GetTexture(TextureID::N_PIERPILLAR));
+	m_FractalTree->SetDiffuseTexture(&m_ResourceLoader.GetTexture(TextureID::T_TREE));
+	m_FractalTree->SetNormalTexture(&m_ResourceLoader.GetTexture(TextureID::N_TREE));
 	result = m_FractalTree->Initialize();
 	if (!result)
 	{
@@ -750,8 +750,6 @@ bool GraphicsClass::Frame(const GameContext& context)
 		m_PostProcessingShader->Toggle();
 	}
 
-
-
 	m_PostProcessingShader->UpdateTimer(context.deltaTime);
 
 #ifdef TERRAIN
@@ -769,6 +767,7 @@ bool GraphicsClass::Frame(const GameContext& context)
 	if (context.input->IsKeypressed(VK_SPACE))
 	{
 		m_FractalTree->Generate();
+		m_FractalTree->Initialize();
 	}
 
 #endif 
@@ -916,33 +915,27 @@ bool GraphicsClass::RenderScene(const GameContext& context)
 #endif // TERRAIN
 
 #ifdef PROCEDURAL
+	//m_FractalTree->Render(m_D3D->GetDeviceContext());
+	int amount = 0;
 
-	//int indexCount = 0;
-	//auto lines = m_FractalTree->getLines();
-	//
-	//for (size_t i = 0; i < lines.size(); i++)
-	//{
-	//	lines[i]->Render(m_D3D->GetDeviceContext());
-	//	indexCount = lines[i]->GetIndexCount();
-	//
-	//	result = m_ColorShader->Render(m_D3D->GetDeviceContext(), indexCount, worldMatrix, viewMatrix, projectionMatrix);
-	//	if (!result)
-	//	{
-	//		return false;
-	//	}
-	//}
-
-	m_FractalTree->Render(m_D3D->GetDeviceContext());
 	for (SimpleObject* object : m_FractalTree->GetModels())
 	{
+		object->Render(m_D3D->GetDeviceContext());
+		//XMVECTOR pos = object->GetPosition();
+		//XMFLOAT3* posFloat= new XMFLOAT3(0,0,0);
+		//XMStoreFloat3(posFloat, pos);
+		//std::cout << "POSITION: " << posFloat->x << ", " << posFloat->y << ", " << posFloat->z << std::endl;
+
 		ID3D11ShaderResourceView* textureArr[2];
 		textureArr[0] = m_FractalTree->GetDiffuseTexture();
 		textureArr[1] = m_FractalTree->GetNormalTexture();
 
-		result = m_LightShader->Render(m_D3D->GetDeviceContext(), object->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
-			textureArr, m_Light->GetDirection(), m_Light->GetDiffuseColor(), m_Light->GetAmbientColor(), context.camera->GetPosition(),
-			m_Light->GetSpecularColor(), m_Light->GetSpecularPower());	result = m_ColorShader->Render(m_D3D->GetDeviceContext(), m_FractalTree->GetIndexCount(),
-				worldMatrix, viewMatrix, projectionMatrix);
+		result = m_LightShader->Render(m_D3D->GetDeviceContext(), object->GetIndexCount(), *reinterpret_cast<D3DXMATRIX*>(&object->GetWorldMatrix())
+			, viewMatrix, projectionMatrix,
+		textureArr, m_Light->GetDirection(), m_Light->GetDiffuseColor(), m_Light->GetAmbientColor(), context.camera->GetPosition(),
+		m_Light->GetSpecularColor(), m_Light->GetSpecularPower());	
+
+		amount++;
 	}
 	
 #endif // TREE
