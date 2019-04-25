@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-Line::Line(ID3D11Device* device, std::vector<float3> points, float3 color)
+Line::Line(ID3D11Device* device, std::vector<XMFLOAT3> points, float3 color)
 {
 	m_vertexBuffer = 0;
 	m_indexBuffer = 0;
@@ -14,7 +14,6 @@ Line::Line(ID3D11Device* device, std::vector<float3> points, float3 color)
 	m_Color = color;
 
 	Initialize(device);
-
 }
 
 Line::Line(const Line& other)
@@ -36,7 +35,7 @@ bool Line::Initialize(ID3D11Device* device)
 		return false;
 	}
 
-	D3DXMatrixIdentity(&m_worldMatrix);
+	D3DXMatrixIdentity(&m_WorldMatrix);
 
 	return true;
 }
@@ -110,7 +109,7 @@ bool Line::InitializeBuffers(ID3D11Device* device)
 	indices[0] = 0;
 	for (i = 0; i < m_vertexCount; i++)
 	{
-		vertices[i].position = D3DXVECTOR3(m_Points[i].x, m_Points[i].y, m_Points[i].z);
+		vertices[i].position = m_Points[i];
 		vertices[i].color = D3DXVECTOR3(m_Color.x, m_Color.y, m_Color.z);
 
 		/*if (i == 0)

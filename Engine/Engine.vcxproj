@@ -14,7 +14,7 @@
     <ProjectGuid>{3699430F-DA71-4E86-951A-245C9D7BCBEB}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Engine</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -85,6 +85,7 @@
   <ItemGroup>
     <ClCompile Include="cameraclass.cpp" />
     <ClCompile Include="colorshaderclass.cpp" />
+    <ClCompile Include="BasicCylinder.cpp" />
     <ClCompile Include="d3dclass.cpp" />
     <ClCompile Include="FractalTree.cpp" />
     <ClCompile Include="graphicsclass.cpp" />
@@ -112,6 +113,7 @@
   <ItemGroup>
     <ClInclude Include="cameraclass.h" />
     <ClInclude Include="colorshaderclass.h" />
+    <ClInclude Include="BasicCylinder.h" />
     <ClInclude Include="d3dclass.h" />
     <ClInclude Include="FractalTree.h" />
     <ClInclude Include="graphicsclass.h" />

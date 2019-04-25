@@ -8,7 +8,7 @@ ParticleSystemClass::ParticleSystemClass()
 {
 	m_Texture = 0;
 	m_particleList = 0;
-	m_vertices = 0;
+	m_Vertices = 0;
 	m_vertexBuffer = 0;
 	m_indexBuffer = 0;
 }
@@ -226,8 +226,8 @@ bool ParticleSystemClass::InitializeBuffers(ID3D11Device* device)
 	m_indexCount = m_vertexCount;
 
 	// Create the vertex array for the particles that will be rendered.
-	m_vertices = new VertexType[m_vertexCount];
-	if (!m_vertices)
+	m_Vertices = new VertexType[m_vertexCount];
+	if (!m_Vertices)
 	{
 		return false;
 	}
@@ -240,7 +240,7 @@ bool ParticleSystemClass::InitializeBuffers(ID3D11Device* device)
 	}
 
 	// Initialize vertex array to zeros at first.
-	memset(m_vertices, 0, (sizeof(VertexType) * m_vertexCount));
+	memset(m_Vertices, 0, (sizeof(VertexType) * m_vertexCount));
 
 	// Initialize the index array.
 	for (i = 0; i < m_indexCount; i++)
@@ -257,7 +257,7 @@ bool ParticleSystemClass::InitializeBuffers(ID3D11Device* device)
 	vertexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the vertex data.
-	vertexData.pSysMem = m_vertices;
+	vertexData.pSysMem = m_Vertices;
 	vertexData.SysMemPitch = 0;
 	vertexData.SysMemSlicePitch = 0;
 
@@ -453,7 +453,7 @@ bool ParticleSystemClass::UpdateBuffers(ID3D11DeviceContext* deviceContext)
 
 
 	// Initialize vertex array to zeros at first.
-	memset(m_vertices, 0, (sizeof(VertexType) * m_vertexCount));
+	memset(m_Vertices, 0, (sizeof(VertexType) * m_vertexCount));
 
 	// Now build the vertex array from the particle list array.  Each particle is a quad made out of two triangles.
 	index = 0;
@@ -461,33 +461,33 @@ bool ParticleSystemClass::UpdateBuffers(ID3D11DeviceContext* deviceContext)
 	for (i = 0; i < m_currentParticleCount; i++)
 	{
 		// Bottom left.
-		m_vertices[index].position = D3DXVECTOR3(m_particleList[i].positionX, m_particleList[i].positionY, m_particleList[i].positionZ) + (m_CameraRight * (-m_particleList[i].size)) + (m_CameraUp * (-m_particleList[i].size));
-		m_vertices[index].texture = D3DXVECTOR2(0.0f, 1.0f);
+		m_Vertices[index].position = D3DXVECTOR3(m_particleList[i].positionX, m_particleList[i].positionY, m_particleList[i].positionZ) + (m_CameraRight * (-m_particleList[i].size)) + (m_CameraUp * (-m_particleList[i].size));
+		m_Vertices[index].texture = D3DXVECTOR2(0.0f, 1.0f);
 		index++;
 
 		// Top left.
-		m_vertices[index].position = D3DXVECTOR3(m_particleList[i].positionX, m_particleList[i].positionY, m_particleList[i].positionZ) + (m_CameraRight * (-m_particleList[i].size)) + (m_CameraUp * (m_particleList[i].size));
-		m_vertices[index].texture = D3DXVECTOR2(0.0f, 0.0f);
+		m_Vertices[index].position = D3DXVECTOR3(m_particleList[i].positionX, m_particleList[i].positionY, m_particleList[i].positionZ) + (m_CameraRight * (-m_particleList[i].size)) + (m_CameraUp * (m_particleList[i].size));
+		m_Vertices[index].texture = D3DXVECTOR2(0.0f, 0.0f);
 		index++;
 
 		// Bottom right.
-		m_vertices[index].position = D3DXVECTOR3(m_particleList[i].positionX, m_particleList[i].positionY, m_particleList[i].positionZ) + (m_CameraRight * (m_particleList[i].size)) + (m_CameraUp * (-m_particleList[i].size));
-		m_vertices[index].texture = D3DXVECTOR2(1.0f, 1.0f);
+		m_Vertices[index].position = D3DXVECTOR3(m_particleList[i].positionX, m_particleList[i].positionY, m_particleList[i].positionZ) + (m_CameraRight * (m_particleList[i].size)) + (m_CameraUp * (-m_particleList[i].size));
+		m_Vertices[index].texture = D3DXVECTOR2(1.0f, 1.0f);
 		index++;
 
 		// Bottom right.
-		m_vertices[index].position = D3DXVECTOR3(m_particleList[i].positionX, m_particleList[i].positionY, m_particleList[i].positionZ) + (m_CameraRight * (m_particleList[i].size)) + (m_CameraUp * (-m_particleList[i].size));
-		m_vertices[index].texture = D3DXVECTOR2(1.0f, 1.0f);
+		m_Vertices[index].position = D3DXVECTOR3(m_particleList[i].positionX, m_particleList[i].positionY, m_particleList[i].positionZ) + (m_CameraRight * (m_particleList[i].size)) + (m_CameraUp * (-m_particleList[i].size));
+		m_Vertices[index].texture = D3DXVECTOR2(1.0f, 1.0f);
 		index++;
 
 		// Top left.
-		m_vertices[index].position = D3DXVECTOR3(m_particleList[i].positionX, m_particleList[i].positionY, m_particleList[i].positionZ) + (m_CameraRight * (-m_particleList[i].size)) + (m_CameraUp * (m_particleList[i].size));
-		m_vertices[index].texture = D3DXVECTOR2(0.0f, 0.0f);
+		m_Vertices[index].position = D3DXVECTOR3(m_particleList[i].positionX, m_particleList[i].positionY, m_particleList[i].positionZ) + (m_CameraRight * (-m_particleList[i].size)) + (m_CameraUp * (m_particleList[i].size));
+		m_Vertices[index].texture = D3DXVECTOR2(0.0f, 0.0f);
 		index++;
 
 		// Top right.
-		m_vertices[index].position = D3DXVECTOR3(m_particleList[i].positionX, m_particleList[i].positionY, m_particleList[i].positionZ) + (m_CameraRight * (m_particleList[i].size)) + (m_CameraUp * (m_particleList[i].size));
-		m_vertices[index].texture = D3DXVECTOR2(1.0f, 0.0f);
+		m_Vertices[index].position = D3DXVECTOR3(m_particleList[i].positionX, m_particleList[i].positionY, m_particleList[i].positionZ) + (m_CameraRight * (m_particleList[i].size)) + (m_CameraUp * (m_particleList[i].size));
+		m_Vertices[index].texture = D3DXVECTOR2(1.0f, 0.0f);
 		index++;
 	}
 
@@ -502,7 +502,7 @@ bool ParticleSystemClass::UpdateBuffers(ID3D11DeviceContext* deviceContext)
 	verticesPtr = (VertexType*)mappedResource.pData;
 
 	// Copy the data into the vertex buffer.
-	memcpy(verticesPtr, (void*)m_vertices, (sizeof(VertexType) * m_vertexCount));
+	memcpy(verticesPtr, (void*)m_Vertices, (sizeof(VertexType) * m_vertexCount));
 
 	// Unlock the vertex buffer.
 	deviceContext->Unmap(m_vertexBuffer, 0);

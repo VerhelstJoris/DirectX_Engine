@@ -59,7 +59,7 @@ bool GameObject::Initialize(ID3D11Device* device)
 	}
 
 	// Initialize the world matrix to the identity matrix.
-	D3DXMatrixIdentity(&m_worldMatrix);
+	D3DXMatrixIdentity(&m_WorldMatrix);
 
 	return true;
 }
@@ -259,7 +259,7 @@ ID3D11ShaderResourceView* GameObject::GetNormalTexture()
 
 void GameObject::GetWorldMatrix(D3DXMATRIX& worldMatrix)
 {
-	worldMatrix = m_worldMatrix;
+	worldMatrix = m_WorldMatrix;
 	return;
 }
 
@@ -278,7 +278,7 @@ void GameObject::SetPosition(float x, float y, float z)
 	//D3DXMatrixTranslation(&translationMatrix2, );
 
 
-	D3DXMatrixMultiply(&m_worldMatrix, &m_worldMatrix, &translationMatrix);
+	D3DXMatrixMultiply(&m_WorldMatrix, &m_WorldMatrix, &translationMatrix);
 
 	return;
 
@@ -295,7 +295,7 @@ void GameObject::Translate(float x, float y, float z)
 	D3DXMATRIX translationMatrix;
 	D3DXMatrixTranslation(&translationMatrix, x, y, z);
 
-	D3DXMatrixMultiply(&m_worldMatrix, &m_worldMatrix, &translationMatrix);
+	D3DXMatrixMultiply(&m_WorldMatrix, &m_WorldMatrix, &translationMatrix);
 
 	return;
 }
@@ -326,13 +326,13 @@ void GameObject::SetRotation(float x, float y, float z)
 
 
 	//all transforms
-	D3DXMatrixMultiply(&m_worldMatrix, &m_worldMatrix, &translationMatrix1);
+	D3DXMatrixMultiply(&m_WorldMatrix, &m_WorldMatrix, &translationMatrix1);
 
-	D3DXMatrixMultiply(&m_worldMatrix, &m_worldMatrix, &rotMatrixX1);
-	D3DXMatrixMultiply(&m_worldMatrix, &m_worldMatrix, &rotMatrixY1);
-	D3DXMatrixMultiply(&m_worldMatrix, &m_worldMatrix, &rotMatrixZ1);
+	D3DXMatrixMultiply(&m_WorldMatrix, &m_WorldMatrix, &rotMatrixX1);
+	D3DXMatrixMultiply(&m_WorldMatrix, &m_WorldMatrix, &rotMatrixY1);
+	D3DXMatrixMultiply(&m_WorldMatrix, &m_WorldMatrix, &rotMatrixZ1);
 
-	D3DXMatrixMultiply(&m_worldMatrix, &m_worldMatrix, &translationMatrix2);
+	D3DXMatrixMultiply(&m_WorldMatrix, &m_WorldMatrix, &translationMatrix2);
 
 
 	return;
@@ -362,9 +362,9 @@ void GameObject::Rotate(float x, float y, float z)
 	D3DXMatrixRotationY(&rotMatrix, y);
 
 	//all transforms
-	D3DXMatrixMultiply(&m_worldMatrix, &m_worldMatrix, &translationMatrix1);
-	D3DXMatrixMultiply(&m_worldMatrix, &m_worldMatrix, &rotMatrix);
-	D3DXMatrixMultiply(&m_worldMatrix, &m_worldMatrix, &translationMatrix2);
+	D3DXMatrixMultiply(&m_WorldMatrix, &m_WorldMatrix, &translationMatrix1);
+	D3DXMatrixMultiply(&m_WorldMatrix, &m_WorldMatrix, &rotMatrix);
+	D3DXMatrixMultiply(&m_WorldMatrix, &m_WorldMatrix, &translationMatrix2);
 
 	return;
 }
@@ -375,7 +375,7 @@ void GameObject::SetScale(float x, float y, float z)
 	D3DXMATRIX scaleMatrix;
 
 	D3DXMatrixScaling(&scaleMatrix, x, y, z);
-	D3DXMatrixMultiply(&m_worldMatrix, &m_worldMatrix, &scaleMatrix);
+	D3DXMatrixMultiply(&m_WorldMatrix, &m_WorldMatrix, &scaleMatrix);
 
 	return;
 

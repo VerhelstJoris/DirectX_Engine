@@ -4,22 +4,26 @@
 #include <vector>
 #include <d3d11.h>
 #include <d3dx10math.h>
-#include <DirectXMath.h>
+#include <directxmath.h>
+
 
 #include "Structs.h"
+
+using namespace DirectX;
+
 
 class Line
 {
 private:
 	struct VertexType
 	{
-		D3DXVECTOR3 position;
+		XMFLOAT3 position;
 		D3DXVECTOR3 color;
 	};
 
 
 public:
-	Line(ID3D11Device* device, std::vector<float3> points , float3 color);
+	Line(ID3D11Device* device, std::vector<XMFLOAT3> points , float3 color);
 	Line(const Line&);
 	~Line();
 
@@ -40,10 +44,10 @@ private:
 	ID3D11Buffer *m_vertexBuffer, *m_indexBuffer;
 	int m_vertexCount, m_indexCount;
 
-	D3DXMATRIX m_worldMatrix, m_projectionMatrix;
+	D3DXMATRIX m_WorldMatrix, m_projectionMatrix;
 
 
-	std::vector<float3> m_Points;
+	std::vector<XMFLOAT3> m_Points;
 	float3 m_Color;
 };
 

@@ -108,6 +108,9 @@
     <ClCompile Include="PostProcessingShader.cpp">
       <Filter>Source Files\Shader Classes</Filter>
     </ClCompile>
+    <ClCompile Include="BasicCylinder.cpp">
+      <Filter>Source Files\Procedural</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cameraclass.h">
@@ -187,6 +190,9 @@
     </ClInclude>
     <ClInclude Include="PostProcessingShader.h">
       <Filter>Header Files\Shader Classes</Filter>
+    </ClInclude>
+    <ClInclude Include="BasicCylinder.h">
+      <Filter>Header Files\Procedural</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

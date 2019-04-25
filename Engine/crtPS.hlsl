@@ -23,10 +23,10 @@ cbuffer DataBuffer
 {
 	float amountOfColumns;
 	float vignetteStrength;
-	float time;
 	float speed;
-
 	float distortionStrength;
+
+	float time;
 	float3 padding;
 }
 

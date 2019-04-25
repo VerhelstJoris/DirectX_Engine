@@ -30,12 +30,12 @@ bool SkySphere::Initialize(ID3D11Device* device)
 
 
 	// Initialize the world matrix to the identity matrix.
-	D3DXMatrixIdentity(&m_worldMatrix);
+	D3DXMatrixIdentity(&m_WorldMatrix);
 
 	D3DXMATRIX scaleMatrix;
 
 	D3DXMatrixScaling(&scaleMatrix, 150, 150, 150);
-	D3DXMatrixMultiply(&m_worldMatrix, &m_worldMatrix, &scaleMatrix);
+	D3DXMatrixMultiply(&m_WorldMatrix, &m_WorldMatrix, &scaleMatrix);
 
 	return true;
 }
@@ -190,8 +190,8 @@ void SkySphere::SetPosition(float x, float y, float z)
 
 	D3DXMatrixTranslation(&translationMatrixTo, x, y, z);
 
-	//D3DXMatrixMultiply(&m_worldMatrix, &m_worldMatrix, &translationMatrixBack);
-	D3DXMatrixMultiply(&m_worldMatrix, &m_worldMatrix, &translationMatrixTo);
+	//D3DXMatrixMultiply(&m_WorldMatrix, &m_WorldMatrix, &translationMatrixBack);
+	D3DXMatrixMultiply(&m_WorldMatrix, &m_WorldMatrix, &translationMatrixTo);
 
 	return;
 

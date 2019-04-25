@@ -20,7 +20,7 @@ public:
 	void Render(ID3D11DeviceContext*);
 
 	int GetIndexCount();
-	D3DXMATRIX GetWorldMatrix() { return m_worldMatrix; };
+	D3DXMATRIX GetWorldMatrix() { return m_WorldMatrix; };
 	void SetPosition(float x, float y, float z);
 
 	D3DXVECTOR4 GetApexColor() { return m_ApexColor; };
@@ -38,7 +38,7 @@ private:
 
 	D3DXVECTOR4 m_ApexColor, m_CenterColor;
 
-	D3DXMATRIX m_worldMatrix;
+	D3DXMATRIX m_WorldMatrix;
 	float m_positionX, m_positionY, m_positionZ;
 
 };

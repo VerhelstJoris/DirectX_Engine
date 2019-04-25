@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 
+
 struct ContextData
 {
 	bool useContext;

@@ -95,7 +95,7 @@ private:
 	float m_positionX, m_positionY, m_positionZ;
 	float m_rotationX, m_rotationY, m_rotationZ;
 
-	D3DXMATRIX m_worldMatrix, m_projectionMatrix;
+	D3DXMATRIX m_WorldMatrix, m_projectionMatrix;
 
 private:
 	ModelType* m_model;

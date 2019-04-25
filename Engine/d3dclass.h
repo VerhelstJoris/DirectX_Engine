@@ -77,7 +77,7 @@ private:
 	ID3D11RasterizerState* m_rasterStateBackCulling;
 
 	D3DXMATRIX m_projectionMatrix;
-	D3DXMATRIX m_worldMatrix;
+	D3DXMATRIX m_WorldMatrix;
 	D3DXMATRIX m_orthoMatrix;
 
 	ID3D11DepthStencilState* m_depthDisabledStencilState;

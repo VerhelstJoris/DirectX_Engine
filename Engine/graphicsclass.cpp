@@ -8,7 +8,7 @@
 
 //#define TERRAIN
 #define GRAPHICS
-#define PROCEDURAL
+//#define PROCEDURAL
 
 GraphicsClass::GraphicsClass() 
 {
@@ -60,8 +60,8 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd, con
 	}
 
 	// Initialize a base view matrix with the camera for 2D user interface rendering.
-	//context.camera->SetPosition(-13.75, 7.5f, 13.25f);
-	//context.camera->SetRotation(15.0f, 150.0f, 0.0f);
+	context.camera->SetPosition(-13.75, 7.5f, 13.25f);
+	context.camera->SetRotation(15.0f, 150.0f, 0.0f);
 
 	context.camera->Render();
 	context.camera->GetViewMatrix(baseViewMatrix);
@@ -113,7 +113,49 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd, con
 		return false;
 	}
 
+	// Create the render to texture object.
+	m_RenderTexture = new RenderTexture();
+	if (!m_RenderTexture)
+	{
+		return false;
+	}
 
+	// Initialize the render to texture object.
+	result = m_RenderTexture->Initialize(m_D3D->GetDevice(), screenWidth, screenHeight);
+	if (!result)
+	{
+		return false;
+	}
+
+	// Create the full screen ortho window object.
+	m_OrthoWindow = new OrthoWindowClass;
+	if (!m_OrthoWindow)
+	{
+		return false;
+	}
+
+	// Initialize the full screen ortho window object.
+	result = m_OrthoWindow->Initialize(m_D3D->GetDevice(), screenWidth, screenHeight);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the full screen ortho window object.", L"Error", MB_OK);
+		return false;
+	}
+
+	// Create the texture shader object.
+	m_PostProcessingShader = new PostProcessingShader();
+	if (!m_PostProcessingShader)
+	{
+		return false;
+	}
+
+	// Initialize the texture shader object.
+	result = m_PostProcessingShader->Initialize(m_D3D->GetDevice(), hwnd);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the texture shader object.", L"Error", MB_OK);
+		return false;
+	}
 
 #ifdef  GRAPHICS
 
@@ -486,70 +528,20 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd, con
 #endif // TERRAIN
 
 #ifdef PROCEDURAL
-	m_FractalTree = new FractalTree(m_D3D->GetDevice(), float3{ 0.0f,-5.0f,15.0f });
+	m_FractalTree = new FractalTree(m_D3D->GetDevice(), XMVECTOR{ 0.0f,15.0f,15.0f });
 	if (!m_FractalTree)
 	{
 		return false;
 	}
-
-	// Create the render to texture object.
-	m_RenderTexture = new RenderTexture();
-	if (!m_RenderTexture)
-	{
-		return false;
-	}
-
-	// Initialize the render to texture object.
-	result = m_RenderTexture->Initialize(m_D3D->GetDevice(), screenWidth, screenHeight);
+	result = m_FractalTree->Initialize();
 	if (!result)
 	{
+		MessageBox(hwnd, L"Could not initialize the Fractal Tree.", L"Error", MB_OK);
 		return false;
 	}
 
-	// Create the debug window object.
-	//m_DebugWindow = new DebugWindow;
-	//if (!m_DebugWindow)
-	//{
-	//	return false;
-	//}
-	//
-	//// Initialize the debug window object.
-	//result = m_DebugWindow->Initialize(m_D3D->GetDevice(), screenWidth, screenHeight, 100, 100);
-	//if (!result)
-	//{
-	//	MessageBox(hwnd, L"Could not initialize the debug window object.", L"Error", MB_OK);
-	//	return false;
-	//}
 
-	// Create the full screen ortho window object.
-	m_OrthoWindow = new OrthoWindowClass;
-	if (!m_OrthoWindow)
-	{
-		return false;
-	}
-
-	// Initialize the full screen ortho window object.
-	result = m_OrthoWindow->Initialize(m_D3D->GetDevice(), screenWidth, screenHeight);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the full screen ortho window object.", L"Error", MB_OK);
-		return false;
-	}
-
-	// Create the texture shader object.
-	m_PostProcessingShader = new PostProcessingShader();
-	if (!m_PostProcessingShader)
-	{
-		return false;
-	}
-
-	// Initialize the texture shader object.
-	result = m_PostProcessingShader->Initialize(m_D3D->GetDevice(), hwnd);
-	if (!result)
-	{
-		MessageBox(hwnd, L"Could not initialize the texture shader object.", L"Error", MB_OK);
-		return false;
-	}
+	
 	
 #endif // TREE
 
@@ -711,25 +703,6 @@ bool GraphicsClass::Frame(const GameContext& context)
 		return false;
 	}
 
-#ifdef TERRAIN
-
-	if (context.input->IsKeyDown(VK_SPACE))
-	{
-		m_Terrain->GenerateHeightMap(m_D3D->GetDevice(),true);
-	}
-
-#endif // TERRAIN
-
-
-#ifdef PROCEDURAL
-
-	if (context.input->IsKeypressed(VK_SPACE))
-	{
-		m_FractalTree->Generate();
-		
-	}
-
-
 	//postProcessing TOGGLES
 	if (context.input->IsKeyDown(VK_NUMPAD8))
 	{
@@ -748,7 +721,7 @@ bool GraphicsClass::Frame(const GameContext& context)
 
 	if (context.input->IsKeyDown(VK_NUMPAD4))
 	{
-	m_PostProcessingShader->IncrementSpeed(true);
+		m_PostProcessingShader->IncrementSpeed(true);
 	}
 
 	if (context.input->IsKeyDown(VK_NUMPAD1))
@@ -773,10 +746,27 @@ bool GraphicsClass::Frame(const GameContext& context)
 	{
 		m_PostProcessingShader->Toggle();
 	}
-	
+
 
 
 	m_PostProcessingShader->UpdateTimer(context.deltaTime);
+
+#ifdef TERRAIN
+
+	if (context.input->IsKeyDown(VK_SPACE))
+	{
+		m_Terrain->GenerateHeightMap(m_D3D->GetDevice(),true);
+	}
+
+#endif // TERRAIN
+
+
+#ifdef PROCEDURAL
+
+	if (context.input->IsKeypressed(VK_SPACE))
+	{
+		m_FractalTree->Generate();
+		
 
 #endif // TREE
 
@@ -924,20 +914,23 @@ bool GraphicsClass::RenderScene(const GameContext& context)
 
 #ifdef PROCEDURAL
 
-	int indexCount = 0;
-	auto lines = m_FractalTree->getLines();
+	//int indexCount = 0;
+	//auto lines = m_FractalTree->getLines();
+	//
+	//for (size_t i = 0; i < lines.size(); i++)
+	//{
+	//	lines[i]->Render(m_D3D->GetDeviceContext());
+	//	indexCount = lines[i]->GetIndexCount();
+	//
+	//	result = m_ColorShader->Render(m_D3D->GetDeviceContext(), indexCount, worldMatrix, viewMatrix, projectionMatrix);
+	//	if (!result)
+	//	{
+	//		return false;
+	//	}
+	//}
 
-	for (size_t i = 0; i < lines.size(); i++)
-	{
-		lines[i]->Render(m_D3D->GetDeviceContext());
-		indexCount = lines[i]->GetIndexCount();
-
-		result = m_ColorShader->Render(m_D3D->GetDeviceContext(), indexCount, worldMatrix, viewMatrix, projectionMatrix);
-		if (!result)
-		{
-			return false;
-		}
-	}
+	m_FractalTree->Render(m_D3D->GetDeviceContext());
+	result = m_ColorShader->Render(m_D3D->GetDeviceContext(), m_FractalTree->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix);
 #endif // TREE
 
 	//std::cout << "scene rendered" << std::endl;
