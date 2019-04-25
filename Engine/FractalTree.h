@@ -7,11 +7,10 @@
 
 #include "LSystemHelpers.h"
 #include "LSystemRule.h"
-#include "Line.h"
+#include "SimpleObject.h"
 #include "d3dclass.h"
 
 using namespace DirectX;
-
 
 class FractalTree
 {
@@ -44,6 +43,18 @@ public:
 	bool Initialize();
 
 	int GetIndexCount() { return m_Indices.size(); };
+	XMMATRIX GetWorldMatrix() { return m_WorldMatrix; };
+
+	std::vector<SimpleObject*> GetModels() { return m_Models; };
+	ID3D11ShaderResourceView* GetDiffuseTexture() { return m_Texture->GetTexture(); };
+	ID3D11ShaderResourceView* GetNormalTexture() { return m_NormalTexture->GetTexture(); };
+
+
+	void SetWorldMatrix(XMMATRIX world) { m_WorldMatrix = world; };
+	void SetDiffuseTexture(TextureClass* texture) { m_Texture = texture; };
+	void SetNormalTexture(TextureClass* texture) { m_NormalTexture = texture; };
+
+
 
 private:
 	void InterpretSystem(std::string lResult, XMVECTOR startingPoint, float stepSize, float angleDelta);
@@ -52,7 +63,9 @@ private:
 	//variables
 	ID3D11Device* m_Device;
 	ID3D11Buffer* m_VertexBuffer, *m_IndexBuffer;
-	ID3D11ShaderResourceView* m_Texture;
+	TextureClass* m_Texture , *m_NormalTexture;
+
+	std::vector<SimpleObject*> m_Models;
 
 	//axiom
 	std::string m_Axiom = "X";
@@ -67,6 +80,5 @@ private:
 	std::vector<int> m_Indices;			//order of all indices in order of to be rendered
 	
 	XMMATRIX m_WorldMatrix;
-	bool m_UseModel;
 };
 

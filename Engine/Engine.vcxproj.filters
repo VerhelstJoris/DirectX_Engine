@@ -31,6 +31,12 @@
     <Filter Include="Header Files\Graphics">
       <UniqueIdentifier>{19233868-3c20-4c48-ba8c-4adbffdef218}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Procedural\Shapes">
+      <UniqueIdentifier>{5aec6488-78a0-45b8-ad81-12e6612b247c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Procedural\Basic Shapes">
+      <UniqueIdentifier>{60bf0924-0595-494b-b4f3-325848dedafe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cameraclass.cpp">
@@ -108,7 +114,10 @@
     <ClCompile Include="PostProcessingShader.cpp">
       <Filter>Source Files\Shader Classes</Filter>
     </ClCompile>
-    <ClCompile Include="BasicCylinder.cpp">
+    <ClCompile Include="CylinderShape.cpp">
+      <Filter>Source Files\Procedural\Basic Shapes</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleObject.cpp">
       <Filter>Source Files\Procedural</Filter>
     </ClCompile>
   </ItemGroup>
@@ -191,7 +200,10 @@
     <ClInclude Include="PostProcessingShader.h">
       <Filter>Header Files\Shader Classes</Filter>
     </ClInclude>
-    <ClInclude Include="BasicCylinder.h">
+    <ClInclude Include="CylinderShape.h">
+      <Filter>Header Files\Procedural\Shapes</Filter>
+    </ClInclude>
+    <ClInclude Include="SimpleObject.h">
       <Filter>Header Files\Procedural</Filter>
     </ClInclude>
   </ItemGroup>

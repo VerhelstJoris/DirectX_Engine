@@ -6,8 +6,8 @@
 
 OrthoWindowClass::OrthoWindowClass()
 {
-	m_vertexBuffer = 0;
-	m_indexBuffer = 0;
+	m_VertexBuffer = 0;
+	m_IndexBuffer = 0;
 }
 
 
@@ -57,7 +57,7 @@ void OrthoWindowClass::Render(ID3D11DeviceContext* deviceContext)
 
 int OrthoWindowClass::GetIndexCount()
 {
-	return m_indexCount;
+	return m_IndexCount;
 }
 
 
@@ -78,20 +78,20 @@ bool OrthoWindowClass::InitializeBuffers(ID3D11Device* device, int windowWidth, 
 	bottom = top - (float)windowHeight;
 	
 	// Set the number of vertices in the vertex array.
-	m_vertexCount = 6;
+	m_VertexCount = 6;
 
 	// Set the number of indices in the index array.
-	m_indexCount = m_vertexCount;
+	m_IndexCount = m_VertexCount;
 
 	// Create the vertex array.
-	vertices = new VertexType[m_vertexCount];
+	vertices = new VertexType[m_VertexCount];
 	if(!vertices)
 	{
 		return false;
 	}
 
 	// Create the index array.
-	indices = new unsigned long[m_indexCount];
+	indices = new unsigned long[m_IndexCount];
 	if(!indices)
 	{
 		return false;
@@ -119,14 +119,14 @@ bool OrthoWindowClass::InitializeBuffers(ID3D11Device* device, int windowWidth, 
 	vertices[5].texture = D3DXVECTOR2(1.0f, 1.0f);
 
 	// Load the index array with data.
-	for(i=0; i<m_indexCount; i++)
+	for(i=0; i<m_IndexCount; i++)
 	{
 		indices[i] = i;
 	}
 
 	// Set up the description of the vertex buffer.
     vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_vertexCount;
+    vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_VertexCount;
     vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     vertexBufferDesc.CPUAccessFlags = 0;
     vertexBufferDesc.MiscFlags = 0;
@@ -138,7 +138,7 @@ bool OrthoWindowClass::InitializeBuffers(ID3D11Device* device, int windowWidth, 
 	vertexData.SysMemSlicePitch = 0;
 
 	// Now finally create the vertex buffer.
-    result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &m_vertexBuffer);
+    result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &m_VertexBuffer);
 	if(FAILED(result))
 	{
 		return false;
@@ -146,7 +146,7 @@ bool OrthoWindowClass::InitializeBuffers(ID3D11Device* device, int windowWidth, 
 
 	// Set up the description of the index buffer.
     indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    indexBufferDesc.ByteWidth = sizeof(unsigned long) * m_indexCount;
+    indexBufferDesc.ByteWidth = sizeof(unsigned long) * m_IndexCount;
     indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
     indexBufferDesc.CPUAccessFlags = 0;
     indexBufferDesc.MiscFlags = 0;
@@ -158,7 +158,7 @@ bool OrthoWindowClass::InitializeBuffers(ID3D11Device* device, int windowWidth, 
 	indexData.SysMemSlicePitch = 0;
 
 	// Create the index buffer.
-	result = device->CreateBuffer(&indexBufferDesc, &indexData, &m_indexBuffer);
+	result = device->CreateBuffer(&indexBufferDesc, &indexData, &m_IndexBuffer);
 	if(FAILED(result))
 	{
 		return false;
@@ -178,17 +178,17 @@ bool OrthoWindowClass::InitializeBuffers(ID3D11Device* device, int windowWidth, 
 void OrthoWindowClass::ShutdownBuffers()
 {
 	// Release the index buffer.
-	if(m_indexBuffer)
+	if(m_IndexBuffer)
 	{
-		m_indexBuffer->Release();
-		m_indexBuffer = 0;
+		m_IndexBuffer->Release();
+		m_IndexBuffer = 0;
 	}
 
 	// Release the vertex buffer.
-	if(m_vertexBuffer)
+	if(m_VertexBuffer)
 	{
-		m_vertexBuffer->Release();
-		m_vertexBuffer = 0;
+		m_VertexBuffer->Release();
+		m_VertexBuffer = 0;
 	}
 
 	return;
@@ -206,10 +206,10 @@ void OrthoWindowClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
 	offset = 0;
     
 	// Set the vertex buffer to active in the input assembler so it can be rendered.
-	deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
+	deviceContext->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
 
     // Set the index buffer to active in the input assembler so it can be rendered.
-    deviceContext->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+    deviceContext->IASetIndexBuffer(m_IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
     // Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
     deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

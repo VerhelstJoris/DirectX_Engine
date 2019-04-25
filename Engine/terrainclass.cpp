@@ -8,8 +8,8 @@
 
 TerrainClass::TerrainClass()
 {
-	m_vertexBuffer = 0;
-	m_indexBuffer = 0;
+	m_VertexBuffer = 0;
+	m_IndexBuffer = 0;
 	m_heightMap = 0;
 	m_terrainGeneratedToggle = false;
 }
@@ -129,7 +129,7 @@ void TerrainClass::Render(ID3D11DeviceContext* deviceContext)
 
 int TerrainClass::GetIndexCount()
 {
-	return m_indexCount;
+	return m_IndexCount;
 }
 
 float TerrainClass::GetRandomFloat(float min, float max)
@@ -545,20 +545,20 @@ bool TerrainClass::InitializeBuffers(ID3D11Device* device)
 
 
 	// Calculate the number of vertices in the terrain mesh.
-	m_vertexCount = (m_terrainWidth - 1) * (m_terrainHeight - 1) * 6;
+	m_VertexCount = (m_terrainWidth - 1) * (m_terrainHeight - 1) * 6;
 
 	// Set the index count to the same as the vertex count.
-	m_indexCount = m_vertexCount;
+	m_IndexCount = m_VertexCount;
 
 	// Create the vertex array.
-	vertices = new VertexType[m_vertexCount];
+	vertices = new VertexType[m_VertexCount];
 	if(!vertices)
 	{
 		return false;
 	}
 
 	// Create the index array.
-	indices = new unsigned long[m_indexCount];
+	indices = new unsigned long[m_IndexCount];
 	if(!indices)
 	{
 		return false;
@@ -617,7 +617,7 @@ bool TerrainClass::InitializeBuffers(ID3D11Device* device)
 
 	// Set up the description of the static vertex buffer.
     vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_vertexCount;
+    vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_VertexCount;
     vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     vertexBufferDesc.CPUAccessFlags = 0;
     vertexBufferDesc.MiscFlags = 0;
@@ -629,7 +629,7 @@ bool TerrainClass::InitializeBuffers(ID3D11Device* device)
 	vertexData.SysMemSlicePitch = 0;
 
 	// Now create the vertex buffer.
-    result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &m_vertexBuffer);
+    result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &m_VertexBuffer);
 	if(FAILED(result))
 	{
 		return false;
@@ -637,7 +637,7 @@ bool TerrainClass::InitializeBuffers(ID3D11Device* device)
 
 	// Set up the description of the static index buffer.
     indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    indexBufferDesc.ByteWidth = sizeof(unsigned long) * m_indexCount;
+    indexBufferDesc.ByteWidth = sizeof(unsigned long) * m_IndexCount;
     indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
     indexBufferDesc.CPUAccessFlags = 0;
     indexBufferDesc.MiscFlags = 0;
@@ -649,7 +649,7 @@ bool TerrainClass::InitializeBuffers(ID3D11Device* device)
 	indexData.SysMemSlicePitch = 0;
 
 	// Create the index buffer.
-	result = device->CreateBuffer(&indexBufferDesc, &indexData, &m_indexBuffer);
+	result = device->CreateBuffer(&indexBufferDesc, &indexData, &m_IndexBuffer);
 	if(FAILED(result))
 	{
 		return false;
@@ -668,17 +668,17 @@ bool TerrainClass::InitializeBuffers(ID3D11Device* device)
 void TerrainClass::ShutdownBuffers()
 {
 	// Release the index buffer.
-	if(m_indexBuffer)
+	if(m_IndexBuffer)
 	{
-		m_indexBuffer->Release();
-		m_indexBuffer = 0;
+		m_IndexBuffer->Release();
+		m_IndexBuffer = 0;
 	}
 
 	// Release the vertex buffer.
-	if(m_vertexBuffer)
+	if(m_VertexBuffer)
 	{
-		m_vertexBuffer->Release();
-		m_vertexBuffer = 0;
+		m_VertexBuffer->Release();
+		m_VertexBuffer = 0;
 	}
 
 	return;
@@ -695,10 +695,10 @@ void TerrainClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
 	offset = 0;
     
 	// Set the vertex buffer to active in the input assembler so it can be rendered.
-	deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
+	deviceContext->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
 
     // Set the index buffer to active in the input assembler so it can be rendered.
-	deviceContext->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	deviceContext->IASetIndexBuffer(m_IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
     // Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

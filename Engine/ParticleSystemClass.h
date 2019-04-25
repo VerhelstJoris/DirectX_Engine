@@ -93,9 +93,9 @@ private:
 
 	ParticleType* m_particleList;
 
-	int m_vertexCount, m_indexCount;
+	int m_VertexCount, m_IndexCount;
 	VertexType* m_Vertices;
-	ID3D11Buffer *m_vertexBuffer, *m_indexBuffer;
+	ID3D11Buffer *m_VertexBuffer, *m_IndexBuffer;
 
 	D3DXVECTOR3 m_CameraPos, m_CameraUp, m_CameraRight, m_CamForward;
 };

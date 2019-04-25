@@ -1,24 +1,24 @@
 
-#include "BasicCylinder.h"
+#include "CylinderShape.h"
 //reference: https://github.com/Microsoft/DirectXTK/blob/master/Src/Geometry.cpp
 
 
-BasicCylinder::BasicCylinder()
+CylinderShape::CylinderShape()
 {
 
 }
 
-BasicCylinder::BasicCylinder(int radius, int height, int tesselation)
+CylinderShape::CylinderShape(int radius, int height, int tesselation)
 {
 	GenCylinder(radius, height, tesselation);
 }
 
-BasicCylinder::~BasicCylinder()
+CylinderShape::~CylinderShape()
 {
 
 }
 
-inline XMVECTOR BasicCylinder::GetCircleVector(int i, int t)
+inline XMVECTOR CylinderShape::GetCircleVector(int i, int t)
 {
 	float angle = (i * XM_2PI) / t;
 	float deltaX;
@@ -29,7 +29,7 @@ inline XMVECTOR BasicCylinder::GetCircleVector(int i, int t)
 	return XMVectorSet(deltaX, 0, deltaZ, 0.f);
 }
 
-void BasicCylinder::GenCaps(float r, float h, int t, bool isTop)
+void CylinderShape::GenCaps(float r, float h, int t, bool isTop)
 {
 	for (int i = 0; i < t - 2; ++i)
 	{
@@ -71,7 +71,7 @@ void BasicCylinder::GenCaps(float r, float h, int t, bool isTop)
 	}
 }
 
-void BasicCylinder::GenCylinder(float r, float h, int t)
+void CylinderShape::GenCylinder(float r, float h, int t)
 {
 	m_Vertices.clear();
 	m_Indices.clear();
@@ -120,7 +120,7 @@ void BasicCylinder::GenCylinder(float r, float h, int t)
 	}
 }
 
-void BasicCylinder::Rotate(XMMATRIX rotation)
+void CylinderShape::Rotate(XMMATRIX rotation)
 {
 	for (int i = 0; i < m_Vertices.size(); ++i)
 	{
@@ -138,7 +138,7 @@ void BasicCylinder::Rotate(XMMATRIX rotation)
 	}
 }
 
-void BasicCylinder::Translate(XMVECTOR dir)
+void CylinderShape::Translate(XMVECTOR dir)
 {
 	XMMATRIX trans = XMMatrixTranslationFromVector(dir);
 	for (int i = 0; i < m_Vertices.size(); ++i)
@@ -149,27 +149,27 @@ void BasicCylinder::Translate(XMVECTOR dir)
 	}
 }
 
-XMFLOAT3 BasicCylinder::GetPosition(int i)
+XMFLOAT3 CylinderShape::GetPosition(int i)
 {
 	return m_Vertices[i].position;
 }
 
-XMFLOAT2 BasicCylinder::GetTexCoord(int i)
+XMFLOAT2 CylinderShape::GetTexCoord(int i)
 {
 	return m_Vertices[i].texCoord;
 }
 
-XMFLOAT3 BasicCylinder::GetNormal(int i)
+XMFLOAT3 CylinderShape::GetNormal(int i)
 {
 	return m_Vertices[i].normal;
 }
 
-int BasicCylinder::GetNumVertices()
+int CylinderShape::GetNumVertices()
 {
 	return m_Vertices.size();
 }
 
-std::vector<unsigned int> BasicCylinder::GetIndices()
+std::vector<unsigned int> CylinderShape::GetIndices()
 {
 	return m_Indices;
 }

@@ -5,13 +5,11 @@
 
 using namespace DirectX;
 
-//TO-DO 
-//MAKE INHERIT FROM THE GAMEOBJECT CLASS
-//=========================================
+
 //TO-DO
 //MAKE SIMILAR CLASSES FOR OTHER BASIC SHAPES
 
-class BasicCylinder
+class CylinderShape
 {
 private:
 	struct Vertex
@@ -26,9 +24,9 @@ private:
 	};
 
 public:
-	BasicCylinder();
-	BasicCylinder(int, int, int);
-	~BasicCylinder();
+	CylinderShape();
+	CylinderShape(int, int, int);
+	~CylinderShape();
 
 	void GenCaps(float, float, int, bool);
 	void GenCylinder(float, float, int);

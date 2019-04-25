@@ -87,8 +87,8 @@ private:
 
 protected:
 
-	ID3D11Buffer *m_vertexBuffer, *m_indexBuffer;
-	int m_vertexCount, m_indexCount;
+	ID3D11Buffer *m_VertexBuffer, *m_IndexBuffer;
+	int m_VertexCount, m_IndexCount;
 
 private:
 
@@ -98,7 +98,7 @@ private:
 	D3DXMATRIX m_WorldMatrix, m_projectionMatrix;
 
 private:
-	ModelType* m_model;
+	ModelType* m_Model;
 	ModelInfo* m_ModelInfo;
 	TextureClass* m_DiffuseTexture, *m_NormalTexture;
 

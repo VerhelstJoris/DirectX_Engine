@@ -7,8 +7,8 @@
 #include <iostream>
 
 //#define TERRAIN
-#define GRAPHICS
-//#define PROCEDURAL
+//#define GRAPHICS
+#define PROCEDURAL
 
 GraphicsClass::GraphicsClass() 
 {
@@ -157,67 +157,69 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd, con
 		return false;
 	}
 
+#pragma region RESOURCELOADING
+	//initialize the resource loader
+	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_HOUSE, L"../Engine/data/Textures/T_house.jpg");
+	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::N_HOUSE, L"../Engine/data/Textures/N_house.BMP");
+	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_DOOR, L"../Engine/data/Textures/T_Door.BMP");
+	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::N_DOOR, L"../Engine/data/Textures/N_Door.BMP");
+	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_SMALLPROPS, L"../Engine/data/Textures/T_SmallProps.BMP");
+	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::N_SMALLPROPS, L"../Engine/data/Textures/N_SmallProps.BMP");
+	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_GROUND, L"../Engine/data/Textures/T_Ground.BMP");
+	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::N_GROUND, L"../Engine/data/Textures/N_Ground.BMP");
+	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_WHEEL, L"../Engine/data/Textures/T_Wheel.BMP");
+	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::N_WHEEL, L"../Engine/data/Textures/N_Wheel.BMP");
+	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_WINDOW, L"../Engine/data/Textures/T_Window.BMP");
+	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::N_WINDOW, L"../Engine/data/Textures/N_Window.BMP");
+	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_TREE, L"../Engine/data/Textures/T_Tree.BMP");
+	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::N_TREE, L"../Engine/data/Textures/N_Tree.BMP");
+	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_PIERPLATFORM, L"../Engine/data/Textures/T_PierPlatform.BMP");
+	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::N_PIERPLATFORM, L"../Engine/data/Textures/N_PierPlatform.BMP");
+	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_PIERPILLAR, L"../Engine/data/Textures/T_PierPilars.BMP");
+	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::N_PIERPILLAR, L"../Engine/data/Textures/N_PierPilars.BMP");
+	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_ROCKS1, L"../Engine/data/Textures/T_Rocks1.BMP");
+	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::N_ROCKS1, L"../Engine/data/Textures/N_Rocks1.BMP");
+	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_ROCKS2, L"../Engine/data/Textures/T_Rocks2.BMP");
+	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::N_ROCKS2, L"../Engine/data/Textures/N_Rocks2.BMP");
+	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_ROCKPILE, L"../Engine/data/Textures/T_RockPile.BMP");
+	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::N_ROCKPILE, L"../Engine/data/Textures/N_RockPile.BMP");
+	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_SEAWEED, L"../Engine/data/Textures/T_Seaweed.BMP");
+	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::N_SEAWEED, L"../Engine/data/Textures/N_Seaweed.BMP");
+	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_SKY, L"../Engine/data/Textures/T_Sky.png");
+
+
+	m_ResourceLoader.LoadModel(ModelID::HOUSE, L"../Engine/data/Models/house.txt");
+	m_ResourceLoader.LoadModel(ModelID::DOOR, L"../Engine/data/Models/door.txt");
+	m_ResourceLoader.LoadModel(ModelID::SIGN, L"../Engine/data/Models/sign.txt");
+	m_ResourceLoader.LoadModel(ModelID::GROUND, L"../Engine/data/Models/ground.txt");
+	m_ResourceLoader.LoadModel(ModelID::WHEEL, L"../Engine/data/Models/wheel.txt");
+	m_ResourceLoader.LoadModel(ModelID::WINDOW, L"../Engine/data/Models/window.txt");
+	m_ResourceLoader.LoadModel(ModelID::BARREL, L"../Engine/data/Models/barrel.txt");
+	m_ResourceLoader.LoadModel(ModelID::TREE, L"../Engine/data/Models/tree.txt");
+	m_ResourceLoader.LoadModel(ModelID::PIERPLATFORM, L"../Engine/data/Models/pierplatform.txt");
+	m_ResourceLoader.LoadModel(ModelID::PIERPILLAR1, L"../Engine/data/Models/pierPillar1.txt");
+	m_ResourceLoader.LoadModel(ModelID::PIERPILLAR2, L"../Engine/data/Models/pierPillar2.txt");
+	m_ResourceLoader.LoadModel(ModelID::CHIMNEY, L"../Engine/data/Models/chimney.txt");
+	m_ResourceLoader.LoadModel(ModelID::CRATE, L"../Engine/data/Models/crate.txt");
+	m_ResourceLoader.LoadModel(ModelID::ROCKS1, L"../Engine/data/Models/rocks1.txt");
+	m_ResourceLoader.LoadModel(ModelID::ROCKS2, L"../Engine/data/Models/rocks2.txt");
+	m_ResourceLoader.LoadModel(ModelID::SEAWEED1, L"../Engine/data/Models/seaweed1.txt");
+	m_ResourceLoader.LoadModel(ModelID::SEAWEED2, L"../Engine/data/Models/seaweed2.txt");
+	m_ResourceLoader.LoadModel(ModelID::ROCKPILE, L"../Engine/data/Models/rockpile.txt");
+	m_ResourceLoader.LoadModel(ModelID::PLANK1, L"../Engine/data/Models/plank1.txt");
+	m_ResourceLoader.LoadModel(ModelID::PLANK2, L"../Engine/data/Models/plank2.txt");
+	m_ResourceLoader.LoadModel(ModelID::BUOY1, L"../Engine/data/Models/buoy1.txt");
+	m_ResourceLoader.LoadModel(ModelID::BUOY2, L"../Engine/data/Models/buoy2.txt");
+	m_ResourceLoader.LoadModel(ModelID::SPHERE, L"../Engine/data/Models/sphere.txt");
+
+
+#pragma endregion
+
 #ifdef  GRAPHICS
 
 
 
-	#pragma region RESOURCELOADING
-	//initialize the resource loader
-	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_HOUSE			, L"../Engine/data/Textures/T_house.jpg");
-	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::N_HOUSE			, L"../Engine/data/Textures/N_house.BMP");
-	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_DOOR			, L"../Engine/data/Textures/T_Door.BMP");
-	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::N_DOOR			, L"../Engine/data/Textures/N_Door.BMP");
-	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_SMALLPROPS	, L"../Engine/data/Textures/T_SmallProps.BMP");
-	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::N_SMALLPROPS	, L"../Engine/data/Textures/N_SmallProps.BMP");
-	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_GROUND		, L"../Engine/data/Textures/T_Ground.BMP");
-	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::N_GROUND		, L"../Engine/data/Textures/N_Ground.BMP");
-	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_WHEEL			, L"../Engine/data/Textures/T_Wheel.BMP");
-	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::N_WHEEL			, L"../Engine/data/Textures/N_Wheel.BMP");
-	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_WINDOW		, L"../Engine/data/Textures/T_Window.BMP");
-	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::N_WINDOW		, L"../Engine/data/Textures/N_Window.BMP");
-	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_TREE			, L"../Engine/data/Textures/T_Tree.BMP");
-	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::N_TREE			, L"../Engine/data/Textures/N_Tree.BMP");
-	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_PIERPLATFORM	, L"../Engine/data/Textures/T_PierPlatform.BMP");
-	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::N_PIERPLATFORM	, L"../Engine/data/Textures/N_PierPlatform.BMP");
-	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_PIERPILLAR	, L"../Engine/data/Textures/T_PierPilars.BMP");
-	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::N_PIERPILLAR	, L"../Engine/data/Textures/N_PierPilars.BMP");
-	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_ROCKS1		, L"../Engine/data/Textures/T_Rocks1.BMP");
-	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::N_ROCKS1		, L"../Engine/data/Textures/N_Rocks1.BMP");
-	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_ROCKS2		, L"../Engine/data/Textures/T_Rocks2.BMP");
-	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::N_ROCKS2		, L"../Engine/data/Textures/N_Rocks2.BMP");
-	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_ROCKPILE		, L"../Engine/data/Textures/T_RockPile.BMP");
-	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::N_ROCKPILE		, L"../Engine/data/Textures/N_RockPile.BMP");
-	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_SEAWEED		, L"../Engine/data/Textures/T_Seaweed.BMP");
-	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::N_SEAWEED		, L"../Engine/data/Textures/N_Seaweed.BMP");
-	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_SKY			, L"../Engine/data/Textures/T_Sky.png");
-
-
-	m_ResourceLoader.LoadModel(ModelID::HOUSE,			L"../Engine/data/Models/house.txt");
-	m_ResourceLoader.LoadModel(ModelID::DOOR,			L"../Engine/data/Models/door.txt");
-	m_ResourceLoader.LoadModel(ModelID::SIGN,			L"../Engine/data/Models/sign.txt");
-	m_ResourceLoader.LoadModel(ModelID::GROUND,			L"../Engine/data/Models/ground.txt");
-	m_ResourceLoader.LoadModel(ModelID::WHEEL,			L"../Engine/data/Models/wheel.txt");
-	m_ResourceLoader.LoadModel(ModelID::WINDOW,			L"../Engine/data/Models/window.txt");
-	m_ResourceLoader.LoadModel(ModelID::BARREL,			L"../Engine/data/Models/barrel.txt");
-	m_ResourceLoader.LoadModel(ModelID::TREE,			L"../Engine/data/Models/tree.txt");
-	m_ResourceLoader.LoadModel(ModelID::PIERPLATFORM,	L"../Engine/data/Models/pierplatform.txt");
-	m_ResourceLoader.LoadModel(ModelID::PIERPILLAR1,	L"../Engine/data/Models/pierPillar1.txt");
-	m_ResourceLoader.LoadModel(ModelID::PIERPILLAR2,	L"../Engine/data/Models/pierPillar2.txt");
-	m_ResourceLoader.LoadModel(ModelID::CHIMNEY,		L"../Engine/data/Models/chimney.txt");
-	m_ResourceLoader.LoadModel(ModelID::CRATE,			L"../Engine/data/Models/crate.txt");
-	m_ResourceLoader.LoadModel(ModelID::ROCKS1,			L"../Engine/data/Models/rocks1.txt");
-	m_ResourceLoader.LoadModel(ModelID::ROCKS2,			L"../Engine/data/Models/rocks2.txt");
-	m_ResourceLoader.LoadModel(ModelID::SEAWEED1,		L"../Engine/data/Models/seaweed1.txt");
-	m_ResourceLoader.LoadModel(ModelID::SEAWEED2,		L"../Engine/data/Models/seaweed2.txt");
-	m_ResourceLoader.LoadModel(ModelID::ROCKPILE,		L"../Engine/data/Models/rockpile.txt");
-	m_ResourceLoader.LoadModel(ModelID::PLANK1,			L"../Engine/data/Models/plank1.txt");
-	m_ResourceLoader.LoadModel(ModelID::PLANK2,			L"../Engine/data/Models/plank2.txt");
-	m_ResourceLoader.LoadModel(ModelID::BUOY1,			L"../Engine/data/Models/buoy1.txt");
-	m_ResourceLoader.LoadModel(ModelID::BUOY2,			L"../Engine/data/Models/buoy2.txt");
-	m_ResourceLoader.LoadModel(ModelID::SPHERE,			L"../Engine/data/Models/sphere.txt");
-
-
-#pragma endregion
+	
 
 	#pragma region GAMEOBJECTS
 	// Create the models
@@ -533,15 +535,16 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd, con
 	{
 		return false;
 	}
+
+	m_FractalTree->Generate();
+	m_FractalTree->SetDiffuseTexture(&m_ResourceLoader.GetTexture(TextureID::T_PIERPILLAR));
+	m_FractalTree->SetNormalTexture(&m_ResourceLoader.GetTexture(TextureID::N_PIERPILLAR));
 	result = m_FractalTree->Initialize();
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the Fractal Tree.", L"Error", MB_OK);
 		return false;
 	}
-
-
-	
 	
 #endif // TREE
 
@@ -766,9 +769,9 @@ bool GraphicsClass::Frame(const GameContext& context)
 	if (context.input->IsKeypressed(VK_SPACE))
 	{
 		m_FractalTree->Generate();
-		
+	}
 
-#endif // TREE
+#endif 
 
 	return true;
 }
@@ -930,7 +933,18 @@ bool GraphicsClass::RenderScene(const GameContext& context)
 	//}
 
 	m_FractalTree->Render(m_D3D->GetDeviceContext());
-	result = m_ColorShader->Render(m_D3D->GetDeviceContext(), m_FractalTree->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix);
+	for (SimpleObject* object : m_FractalTree->GetModels())
+	{
+		ID3D11ShaderResourceView* textureArr[2];
+		textureArr[0] = m_FractalTree->GetDiffuseTexture();
+		textureArr[1] = m_FractalTree->GetNormalTexture();
+
+		result = m_LightShader->Render(m_D3D->GetDeviceContext(), object->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix,
+			textureArr, m_Light->GetDirection(), m_Light->GetDiffuseColor(), m_Light->GetAmbientColor(), context.camera->GetPosition(),
+			m_Light->GetSpecularColor(), m_Light->GetSpecularPower());	result = m_ColorShader->Render(m_D3D->GetDeviceContext(), m_FractalTree->GetIndexCount(),
+				worldMatrix, viewMatrix, projectionMatrix);
+	}
+	
 #endif // TREE
 
 	//std::cout << "scene rendered" << std::endl;

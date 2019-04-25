@@ -11,7 +11,6 @@ FractalTree::FractalTree(ID3D11Device* device, XMVECTOR startPosition)
 	m_Device = device;
 	m_StartPosition = startPosition;
 
-
 	//L_SYSTEM
 	//-------------------------------------------------
 	m_CurrentSentence = m_Axiom;
@@ -21,64 +20,20 @@ FractalTree::FractalTree(ID3D11Device* device, XMVECTOR startPosition)
 	m_Rules.push_back(new LSystemRule('F', "FF"));
 
 	//
-	m_UseModel = false;
 	m_WorldMatrix = XMMatrixIdentity();
 	m_Texture = 0;
 }
 
 bool FractalTree::Initialize()
 {
-	if (m_UseModel)
+	
+	for (size_t i = 0; i < m_Models.size(); i++)
 	{
-		//for (Model* m : m_models)
-		//{
-		//	m->SetWorldMatrix(m->GetWorldMatrix() * m_WorldMatrix);
-		//	m->SetTexture(m_texture);
-		//	m->InitializeBuffers(m_Device);
-		//}
+		m_Models[i]->SetWorldMatrix(m_Models[i]->GetWorldMatrix() * m_WorldMatrix);
+		m_Models[i]->SetTexture(m_Texture);
+		m_Models[i]->InitializeBuffers(m_Device);
 	}
-	else
-	{
-		D3D11_BUFFER_DESC vBufferDesc;
-		D3D11_BUFFER_DESC iBufferDesc;
-
-		D3D11_SUBRESOURCE_DATA vData;
-		D3D11_SUBRESOURCE_DATA iData;
-
-		HRESULT result;
-
-		vBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-		vBufferDesc.ByteWidth = sizeof(VertexType) * m_Vertices.size();
-		vBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		vBufferDesc.CPUAccessFlags = 0;
-		vBufferDesc.MiscFlags = 0;
-		vBufferDesc.StructureByteStride = 0;
-
-		vData.pSysMem = m_Vertices.data();
-		vData.SysMemPitch = 0;
-		vData.SysMemSlicePitch = 0;
-
-		result = m_Device->CreateBuffer(&vBufferDesc, &vData, &m_VertexBuffer);
-		if (FAILED(result))
-			return false;
-
-		iBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-		iBufferDesc.ByteWidth = sizeof(int) * m_Indices.size();
-		iBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-		iBufferDesc.CPUAccessFlags = 0;
-		iBufferDesc.MiscFlags = 0;
-		iBufferDesc.StructureByteStride = 0;
-
-		iData.pSysMem = m_Indices.data();
-		iData.SysMemPitch = 0;
-		iData.SysMemSlicePitch = 0;
-
-		result = m_Device->CreateBuffer(&iBufferDesc, &iData, &m_IndexBuffer);
-		if (FAILED(result))
-			return false;
-	}
-
-
+	
 	return true;
 }
 
@@ -90,7 +45,7 @@ void FractalTree::ShutDown()
 {
 	if (m_Texture)
 	{
-		m_Texture->Release();
+		m_Texture->Shutdown();
 		m_Texture = 0;
 	}
 }
@@ -159,7 +114,7 @@ void FractalTree::Generate()
 	InterpretSystem(m_CurrentSentence,m_StartPosition, 0.75f, (25.7f * XM_PI) / 180);
 }
 
-void FractalTree::InterpretSystem(std::string lResult, XMVECTOR startingPoint, float stepSize, float angleDelta)
+void FractalTree::InterpretSystem(std::string sentence, XMVECTOR startingPoint, float stepSize, float angleDelta)
 {
 	TurtleState curState, nextState;
 	curState.pos = startingPoint;
@@ -176,8 +131,8 @@ void FractalTree::InterpretSystem(std::string lResult, XMVECTOR startingPoint, f
 	float origRad = curState.radius;		//radius branch
 	float origStepSize = curState.stepSize;	//length branch
 
-
-	for (char c : lResult)
+	
+	for (char c : sentence)
 	{
 		nextState = curState;
 		XMVECTOR rotated = XMVector3Transform(curState.dir, rotMatrix);
@@ -276,32 +231,11 @@ void FractalTree::InterpretSystem(std::string lResult, XMVECTOR startingPoint, f
 
 bool FractalTree::Render(ID3D11DeviceContext* context)
 {
-	if (m_UseModel)
+	for (size_t i = 0; i < m_Models.size(); i++)
 	{
-		//for (Model* m : m_models)
-		//{
-		//	m->Render(context);
-		//}
+		m_Models[i]->Render(context);
 	}
-	else
-	{
-		unsigned int stride;
-		unsigned int offset;
-
-		// Set vertex buffer stride and offset.
-		stride = sizeof(VertexType);
-		offset = 0;
-
-		// Set the vertex buffer to active in the input assembler so it can be rendered.
-		context->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
-
-		// Set the index buffer to active in the input assembler so it can be rendered.
-		context->IASetIndexBuffer(m_IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
-
-		// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
-		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
-
-	}
+	
 	return true;
 }
 

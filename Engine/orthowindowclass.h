@@ -41,8 +41,8 @@ private:
 	void RenderBuffers(ID3D11DeviceContext*);
 
 private:
-	ID3D11Buffer *m_vertexBuffer, *m_indexBuffer;
-	int m_vertexCount, m_indexCount;
+	ID3D11Buffer *m_VertexBuffer, *m_IndexBuffer;
+	int m_VertexCount, m_IndexCount;
 };
 
 #endif

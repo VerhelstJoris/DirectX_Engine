@@ -34,7 +34,7 @@ private:
 
 private:
 	ModelInfo* m_ModelInfo;
-	ID3D11Buffer *m_vertexBuffer, *m_indexBuffer;
+	ID3D11Buffer *m_VertexBuffer, *m_IndexBuffer;
 
 	D3DXVECTOR4 m_ApexColor, m_CenterColor;
 

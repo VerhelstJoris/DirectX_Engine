@@ -8,15 +8,15 @@ using namespace std;
 
 GameObject::GameObject(ID3D11Device* device, ModelInfo* modelInfo, TextureClass* difuseTexture, TextureClass* normalTexture, bool scaleDown)
 {
-	m_vertexBuffer = 0;
-	m_indexBuffer = 0;
+	m_VertexBuffer = 0;
+	m_IndexBuffer = 0;
 
 	m_DiffuseTexture = difuseTexture;
 	m_NormalTexture = normalTexture;
 	m_ModelInfo = modelInfo;
-	m_model = m_ModelInfo->modelType;
-	m_vertexCount = m_ModelInfo->vertexCount;
-	m_indexCount = m_ModelInfo->indexCount;
+	m_Model = m_ModelInfo->modelType;
+	m_VertexCount = m_ModelInfo->vertexCount;
+	m_IndexCount = m_ModelInfo->indexCount;
 
 	bool result = Initialize(device);
 
@@ -116,7 +116,7 @@ void GameObject::Render(ID3D11DeviceContext* deviceContext)
 
 int GameObject::GetIndexCount()
 {
-	return m_indexCount;
+	return m_IndexCount;
 }
 
 bool GameObject::InitializeBuffers(ID3D11Device* device)
@@ -129,27 +129,27 @@ bool GameObject::InitializeBuffers(ID3D11Device* device)
 	int i;
 
 	// Create the vertex array.
-	vertices = new VertexType[m_vertexCount];
+	vertices = new VertexType[m_VertexCount];
 	if(!vertices)
 	{
 		return false;
 	}
 
 	// Create the index array.
-	indices = new unsigned long[m_indexCount];
+	indices = new unsigned long[m_IndexCount];
 	if(!indices)
 	{
 		return false;
 	}
 
 	// Load the vertex array and index array with data.
-	for (i = 0; i < m_vertexCount; i++)
+	for (i = 0; i < m_VertexCount; i++)
 	{
-		vertices[i].position = D3DXVECTOR3(m_model[i].x, m_model[i].y, m_model[i].z);
-		vertices[i].texture = D3DXVECTOR2(m_model[i].tu, m_model[i].tv);
-		vertices[i].normal = D3DXVECTOR3(m_model[i].nx, m_model[i].ny, m_model[i].nz);
-		vertices[i].tangent = D3DXVECTOR3(m_model[i].tx, m_model[i].ty, m_model[i].tz);
-		vertices[i].binormal = D3DXVECTOR3(m_model[i].bx, m_model[i].by, m_model[i].bz);
+		vertices[i].position = D3DXVECTOR3(m_Model[i].x, m_Model[i].y, m_Model[i].z);
+		vertices[i].texture = D3DXVECTOR2(m_Model[i].tu, m_Model[i].tv);
+		vertices[i].normal = D3DXVECTOR3(m_Model[i].nx, m_Model[i].ny, m_Model[i].nz);
+		vertices[i].tangent = D3DXVECTOR3(m_Model[i].tx, m_Model[i].ty, m_Model[i].tz);
+		vertices[i].binormal = D3DXVECTOR3(m_Model[i].bx, m_Model[i].by, m_Model[i].bz);
 
 		indices[i] = i;
 	}
@@ -157,7 +157,7 @@ bool GameObject::InitializeBuffers(ID3D11Device* device)
 
 	// Set up the description of the static vertex buffer.
     vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_vertexCount;
+    vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_VertexCount;
     vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     vertexBufferDesc.CPUAccessFlags = 0;
     vertexBufferDesc.MiscFlags = 0;
@@ -169,7 +169,7 @@ bool GameObject::InitializeBuffers(ID3D11Device* device)
 	vertexData.SysMemSlicePitch = 0;
 
 	// Now create the vertex buffer.
-    result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &m_vertexBuffer);
+    result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &m_VertexBuffer);
 	if(FAILED(result))
 	{
 		return false;
@@ -177,7 +177,7 @@ bool GameObject::InitializeBuffers(ID3D11Device* device)
 
 	// Set up the description of the static index buffer.
     indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    indexBufferDesc.ByteWidth = sizeof(unsigned long) * m_indexCount;
+    indexBufferDesc.ByteWidth = sizeof(unsigned long) * m_IndexCount;
     indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
     indexBufferDesc.CPUAccessFlags = 0;
     indexBufferDesc.MiscFlags = 0;
@@ -189,7 +189,7 @@ bool GameObject::InitializeBuffers(ID3D11Device* device)
 	indexData.SysMemSlicePitch = 0;
 
 	// Create the index buffer.
-	result = device->CreateBuffer(&indexBufferDesc, &indexData, &m_indexBuffer);
+	result = device->CreateBuffer(&indexBufferDesc, &indexData, &m_IndexBuffer);
 	if(FAILED(result))
 	{
 		return false;
@@ -208,17 +208,17 @@ bool GameObject::InitializeBuffers(ID3D11Device* device)
 void GameObject::ShutdownBuffers()
 {
 	// Release the index buffer.
-	if(m_indexBuffer)
+	if(m_IndexBuffer)
 	{
-		m_indexBuffer->Release();
-		m_indexBuffer = 0;
+		m_IndexBuffer->Release();
+		m_IndexBuffer = 0;
 	}
 
 	// Release the vertex buffer.
-	if(m_vertexBuffer)
+	if(m_VertexBuffer)
 	{
-		m_vertexBuffer->Release();
-		m_vertexBuffer = 0;
+		m_VertexBuffer->Release();
+		m_VertexBuffer = 0;
 	}
 
 	return;
@@ -235,10 +235,10 @@ void GameObject::RenderBuffers(ID3D11DeviceContext* deviceContext)
 	offset = 0;
     
 	// Set the vertex buffer to active in the input assembler so it can be rendered.
-	deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
+	deviceContext->IASetVertexBuffers(0, 1, &m_VertexBuffer, &stride, &offset);
 
     // Set the index buffer to active in the input assembler so it can be rendered.
-	deviceContext->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	deviceContext->IASetIndexBuffer(m_IndexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
     // Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -399,7 +399,7 @@ void GameObject::CalculateModelVectors()
 
 
 	// Calculate the number of faces in the model.
-	faceCount = m_vertexCount / 3;
+	faceCount = m_VertexCount / 3;
 
 	// Initialize the index to the model data.
 	index = 0;
@@ -408,34 +408,34 @@ void GameObject::CalculateModelVectors()
 	for (i = 0; i < faceCount; i++)
 	{
 		// Get the three vertices for this face from the model.
-		vertex1.x = m_model[index].x;
-		vertex1.y = m_model[index].y;
-		vertex1.z = m_model[index].z;
-		vertex1.tu = m_model[index].tu;
-		vertex1.tv = m_model[index].tv;
-		vertex1.nx = m_model[index].nx;
-		vertex1.ny = m_model[index].ny;
-		vertex1.nz = m_model[index].nz;
+		vertex1.x = m_Model[index].x;
+		vertex1.y = m_Model[index].y;
+		vertex1.z = m_Model[index].z;
+		vertex1.tu = m_Model[index].tu;
+		vertex1.tv = m_Model[index].tv;
+		vertex1.nx = m_Model[index].nx;
+		vertex1.ny = m_Model[index].ny;
+		vertex1.nz = m_Model[index].nz;
 		index++;
 
-		vertex2.x = m_model[index].x;
-		vertex2.y = m_model[index].y;
-		vertex2.z = m_model[index].z;
-		vertex2.tu = m_model[index].tu;
-		vertex2.tv = m_model[index].tv;
-		vertex2.nx = m_model[index].nx;
-		vertex2.ny = m_model[index].ny;
-		vertex2.nz = m_model[index].nz;
+		vertex2.x = m_Model[index].x;
+		vertex2.y = m_Model[index].y;
+		vertex2.z = m_Model[index].z;
+		vertex2.tu = m_Model[index].tu;
+		vertex2.tv = m_Model[index].tv;
+		vertex2.nx = m_Model[index].nx;
+		vertex2.ny = m_Model[index].ny;
+		vertex2.nz = m_Model[index].nz;
 		index++;
 
-		vertex3.x = m_model[index].x;
-		vertex3.y = m_model[index].y;
-		vertex3.z = m_model[index].z;
-		vertex3.tu = m_model[index].tu;
-		vertex3.tv = m_model[index].tv;
-		vertex3.nx = m_model[index].nx;
-		vertex3.ny = m_model[index].ny;
-		vertex3.nz = m_model[index].nz;
+		vertex3.x = m_Model[index].x;
+		vertex3.y = m_Model[index].y;
+		vertex3.z = m_Model[index].z;
+		vertex3.tu = m_Model[index].tu;
+		vertex3.tv = m_Model[index].tv;
+		vertex3.nx = m_Model[index].nx;
+		vertex3.ny = m_Model[index].ny;
+		vertex3.nz = m_Model[index].nz;
 		index++;
 
 		// Calculate the tangent and binormal of that face.
@@ -445,35 +445,35 @@ void GameObject::CalculateModelVectors()
 		CalculateNormal(tangent, binormal, normal);
 
 		// Store the normal, tangent, and binormal for this face back in the model structure.
-		m_model[index - 1].nx = normal.x;
-		m_model[index - 1].ny = normal.y;
-		m_model[index - 1].nz = normal.z;
-		m_model[index - 1].tx = tangent.x;
-		m_model[index - 1].ty = tangent.y;
-		m_model[index - 1].tz = tangent.z;
-		m_model[index - 1].bx = binormal.x;
-		m_model[index - 1].by = binormal.y;
-		m_model[index - 1].bz = binormal.z;
+		m_Model[index - 1].nx = normal.x;
+		m_Model[index - 1].ny = normal.y;
+		m_Model[index - 1].nz = normal.z;
+		m_Model[index - 1].tx = tangent.x;
+		m_Model[index - 1].ty = tangent.y;
+		m_Model[index - 1].tz = tangent.z;
+		m_Model[index - 1].bx = binormal.x;
+		m_Model[index - 1].by = binormal.y;
+		m_Model[index - 1].bz = binormal.z;
 
-		m_model[index - 2].nx = normal.x;
-		m_model[index - 2].ny = normal.y;
-		m_model[index - 2].nz = normal.z;
-		m_model[index - 2].tx = tangent.x;
-		m_model[index - 2].ty = tangent.y;
-		m_model[index - 2].tz = tangent.z;
-		m_model[index - 2].bx = binormal.x;
-		m_model[index - 2].by = binormal.y;
-		m_model[index - 2].bz = binormal.z;
+		m_Model[index - 2].nx = normal.x;
+		m_Model[index - 2].ny = normal.y;
+		m_Model[index - 2].nz = normal.z;
+		m_Model[index - 2].tx = tangent.x;
+		m_Model[index - 2].ty = tangent.y;
+		m_Model[index - 2].tz = tangent.z;
+		m_Model[index - 2].bx = binormal.x;
+		m_Model[index - 2].by = binormal.y;
+		m_Model[index - 2].bz = binormal.z;
 
-		m_model[index - 3].nx = normal.x;
-		m_model[index - 3].ny = normal.y;
-		m_model[index - 3].nz = normal.z;
-		m_model[index - 3].tx = tangent.x;
-		m_model[index - 3].ty = tangent.y;
-		m_model[index - 3].tz = tangent.z;
-		m_model[index - 3].bx = binormal.x;
-		m_model[index - 3].by = binormal.y;
-		m_model[index - 3].bz = binormal.z;
+		m_Model[index - 3].nx = normal.x;
+		m_Model[index - 3].ny = normal.y;
+		m_Model[index - 3].nz = normal.z;
+		m_Model[index - 3].tx = tangent.x;
+		m_Model[index - 3].ty = tangent.y;
+		m_Model[index - 3].tz = tangent.z;
+		m_Model[index - 3].bx = binormal.x;
+		m_Model[index - 3].by = binormal.y;
+		m_Model[index - 3].bz = binormal.z;
 	}
 
 	return;

@@ -85,7 +85,7 @@
   <ItemGroup>
     <ClCompile Include="cameraclass.cpp" />
     <ClCompile Include="colorshaderclass.cpp" />
-    <ClCompile Include="BasicCylinder.cpp" />
+    <ClCompile Include="CylinderShape.cpp" />
     <ClCompile Include="d3dclass.cpp" />
     <ClCompile Include="FractalTree.cpp" />
     <ClCompile Include="graphicsclass.cpp" />
@@ -95,6 +95,7 @@
     <ClCompile Include="Line.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="SimpleObject.cpp" />
     <ClCompile Include="orthowindowclass.cpp" />
     <ClCompile Include="particleshaderclass.cpp" />
     <ClCompile Include="ParticleSystemClass.cpp" />
@@ -113,7 +114,7 @@
   <ItemGroup>
     <ClInclude Include="cameraclass.h" />
     <ClInclude Include="colorshaderclass.h" />
-    <ClInclude Include="BasicCylinder.h" />
+    <ClInclude Include="CylinderShape.h" />
     <ClInclude Include="d3dclass.h" />
     <ClInclude Include="FractalTree.h" />
     <ClInclude Include="graphicsclass.h" />
@@ -123,6 +124,7 @@
     <ClInclude Include="lightclass.h" />
     <ClInclude Include="lightshaderclass.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="SimpleObject.h" />
     <ClInclude Include="orthowindowclass.h" />
     <ClInclude Include="particleshaderclass.h" />
     <ClInclude Include="ParticleSystemClass.h" />
