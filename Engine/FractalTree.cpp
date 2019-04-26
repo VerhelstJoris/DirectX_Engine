@@ -15,19 +15,22 @@ FractalTree::FractalTree(ID3D11Device* device, XMVECTOR startPosition)
 	//-------------------------------------------------
 
 	//RULESET 1
-	m_Axiom = "X";
-	m_Rules.push_back(new LSystemRule('X', "F[&FFFX]///[&FFFX]///[&FFFX]F","","",1.0f));
-	m_Rules.push_back(new LSystemRule('F', "FFF","0","",1.0f));
-
-
-
 	//m_Axiom = "X";
-
-	//m_Rules.push_back(new LSystemRule('X', "F[+X][-X][^X][&X]F","","",1.0f));
-	//m_Rules.push_back(new LSystemRule('X', "F[-X][^X]F","","",0.6f));
+	//m_Rules.push_back(new LSystemRule('X', "[&FFFX]///[&FFFX]///[&FFFX]F","","",1.0f));
 	//m_Rules.push_back(new LSystemRule('F', "FF","0","",1.0f));
 
-	//
+
+	//RULESET 2
+	m_Axiom = "X";
+	m_Rules.push_back(new LSystemRule('X', "F[+X][&-X]F[^X][&X]F","","",1.0f));
+	m_Rules.push_back(new LSystemRule('&', "F[&+X+F][^-X&F][^FX]F","","",0.8f));
+	m_Rules.push_back(new LSystemRule('F', "FF","0","",0.5f));
+
+	//RULESET 3
+	//m_Axiom = "X";
+	//m_Rules.push_back(new LSystemRule('X', "F[+X][&-X]F[^X][&X]F", "", "", 1.0f));
+	//m_Rules.push_back(new LSystemRule('&', "F[&+X+F][^-X&F][^FX]F", "", "", 0.8f));
+
 	m_CurrentSentence = m_Axiom;
 
 	m_WorldMatrix = XMMatrixIdentity();
@@ -40,7 +43,6 @@ bool FractalTree::Initialize()
 	for (size_t i = 0; i < m_Models.size(); i++)
 	{
 		m_Models[i]->SetWorldMatrix(m_Models[i]->GetWorldMatrix() * m_WorldMatrix);
-		//m_Models[i]->SetTexture(m_DiffuseTexture);
 		m_Models[i]->InitializeBuffers(m_Device);
 	}
 	
@@ -86,7 +88,8 @@ void FractalTree::Generate()
 
 		for (size_t j = 0; j < m_Rules.size(); j++)
 		{
-			if (current == m_Rules[j]->GetSymbol())
+			char ruleSymbol = m_Rules[j]->GetSymbol();
+			if (current == ruleSymbol)
 			{
 				bool contextCorrect = true;
 
@@ -99,7 +102,7 @@ void FractalTree::Generate()
 					if (m_CurrentSentence.substr(i - leftContextData.contextLength, leftContextData.contextLength) != leftContextData.context)
 						contextCorrect = false;
 				}
-				else if (leftContextData.useContext && leftContextData.context == "0" && i == 0)
+				else if (leftContextData.useContext && leftContextData.context == "0" && i != 0)
 				{
 					// context of 0 means it has to be the first character of the sentence
 					contextCorrect = false;
@@ -120,18 +123,32 @@ void FractalTree::Generate()
 
 				}
 
+
 				if (contextCorrect)
 				{
-					float random = (float)rand() / (float)(RAND_MAX / 1.0f);
-
-					if (random <= m_Rules[j]->GetProbability())
+					if (!(m_PrevRuleUsed && m_PrevSymbol == ruleSymbol))	//stochaistic
 					{
+						float random = (float)rand() / (float)(RAND_MAX / 1.0f);
 
-						nextSentence.append(m_Rules[j]->GetReplacement());
-						found = true;
+						if (random <= m_Rules[j]->GetProbability() )
+						{
+							nextSentence.append(m_Rules[j]->GetReplacement());
+							found = true;
+							m_PrevRuleUsed = true;
+						}
+						else
+						{
+							m_PrevRuleUsed = false;
+						}
+					}
+					else
+					{
+						m_PrevRuleUsed = false;
 					}
 				
 				}
+
+				m_PrevSymbol = ruleSymbol;
 			
 			}
 		}

@@ -769,6 +769,7 @@ bool GraphicsClass::Frame(const GameContext& context)
 
 	if (context.input->IsKeypressed(VK_SPACE))
 	{
+		m_FractalTree->SetBranchLength(m_FractalTree->GetBranchLength()+1);
 		m_FractalTree->Generate();
 		m_FractalTree->Initialize();
 	}

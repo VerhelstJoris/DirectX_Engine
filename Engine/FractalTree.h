@@ -60,6 +60,8 @@ public:
 	void SetBranchLength(float length) { m_BranchLength = length; };
 	void SetBranchStartRadius(float radius) { m_BranchStartRadius = radius; };
 
+	float GetBranchLength() { return m_BranchLength; };
+
 private:
 	void ResetModels();
 	void InterpretSystem(std::string lResult, XMVECTOR startingPoint, float stepSize, float angleDelta, float branchRadius);
@@ -70,6 +72,8 @@ private:
 	TextureClass* m_DiffuseTexture , *m_NormalTexture;
 
 	std::vector<SimpleObject*> m_Models;
+	char m_PrevSymbol = '0';
+	bool m_PrevRuleUsed = false;
 
 	//axiom
 	std::string m_Axiom = "X";
@@ -81,8 +85,8 @@ private:
 	//tree visual variables
 	float m_BranchStartRadius = 0.5f;
 	float m_BranchLength = 4.0f;
-	float m_BranchAngle = (30.0f * XM_PI) / 180;
-	float m_AngleRandomAmount = (25.0f * XM_PI) / 180;
+	float m_BranchAngle = (25.0f * XM_PI) / 180;
+	float m_AngleRandomAmount = (15.0f * XM_PI) / 180;
 
 	XMVECTOR m_StartPosition;
 
