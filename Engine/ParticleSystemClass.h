@@ -89,7 +89,7 @@ private:
 	int m_currentParticleCount;
 	float m_accumulatedTime;
 
-	TextureClass* m_Texture;
+	TextureClass* m_DiffuseTexture;
 
 	ParticleType* m_particleList;
 

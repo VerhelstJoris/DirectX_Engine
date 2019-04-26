@@ -13,15 +13,16 @@ FractalTree::FractalTree(ID3D11Device* device, XMVECTOR startPosition)
 
 	//L_SYSTEM
 	//-------------------------------------------------
+	m_Axiom = "X";
 	m_CurrentSentence = m_Axiom;
 
-	//m_Rules.push_back(new LSystemRule( 'F', std::string("F[--F][+F][F - F - F][F++F - F[F + F]]") , std::string(""),std::string("") , 0.8f));
-	m_Rules.push_back(new LSystemRule('X', "F[+X][-X][^X][&X]FX"));
-	m_Rules.push_back(new LSystemRule('F', "FF"));
+	m_Rules.push_back(new LSystemRule('X', "F[+X][-X][^X][&X]F","","",1.0f));
+	m_Rules.push_back(new LSystemRule('X', "F[-X][^X]F","","",0.6f));
+	m_Rules.push_back(new LSystemRule('F', "FF","0","",1.0f));
 
 	//
 	m_WorldMatrix = XMMatrixIdentity();
-	m_Texture = 0;
+	m_DiffuseTexture = 0;
 }
 
 bool FractalTree::Initialize()
@@ -30,7 +31,7 @@ bool FractalTree::Initialize()
 	for (size_t i = 0; i < m_Models.size(); i++)
 	{
 		m_Models[i]->SetWorldMatrix(m_Models[i]->GetWorldMatrix() * m_WorldMatrix);
-		m_Models[i]->SetTexture(m_Texture);
+		//m_Models[i]->SetTexture(m_DiffuseTexture);
 		m_Models[i]->InitializeBuffers(m_Device);
 	}
 	
@@ -43,16 +44,29 @@ FractalTree::~FractalTree()
 
 void FractalTree::ShutDown()
 {
-	if (m_Texture)
+	if (m_DiffuseTexture)
 	{
-		m_Texture->Shutdown();
-		m_Texture = 0;
+		m_DiffuseTexture->Shutdown();
+		m_DiffuseTexture = 0;
+	}
+
+	if (m_NormalTexture)
+	{
+		m_NormalTexture->Shutdown();
+		m_NormalTexture = 0;
+	}
+
+	for (size_t i = 0; i < m_Models.size(); i++)
+	{
+		delete m_Models[i];
+		m_Models[i] = nullptr;
 	}
 }
 
 void FractalTree::Generate()
 {
-	//TO-DO:
+	ResetModels();
+
 	std::string nextSentence = "";
 	
 	for (size_t i = 0; i < m_CurrentSentence.length(); i++)
@@ -76,6 +90,12 @@ void FractalTree::Generate()
 					if (m_CurrentSentence.substr(i - leftContextData.contextLength, leftContextData.contextLength) != leftContextData.context)
 						contextCorrect = false;
 				}
+				else if (leftContextData.useContext && leftContextData.context == "0" && i == 0)
+				{
+					// context of 0 means it has to be the first character of the sentence
+					contextCorrect = false;
+
+				}
 
 				//right context
 				if (rightContextData.useContext && i >= rightContextData.contextLength)
@@ -83,6 +103,12 @@ void FractalTree::Generate()
 
 					if (m_CurrentSentence.substr(i, rightContextData.contextLength) != rightContextData.context)
 						contextCorrect = false;
+				}
+				else if (rightContextData.useContext && rightContextData.context == "0" && i != m_CurrentSentence.length()-1)
+				{
+					// context of 0 means it has to be the first character of the sentence
+					contextCorrect = false;
+
 				}
 
 				if (contextCorrect)
@@ -111,17 +137,18 @@ void FractalTree::Generate()
    	std::cout << "new sentence: " + m_CurrentSentence << std::endl;
 
 	//GenerateLines(m_CurrentSentence , m_StartPosition,  m_BranchLength,m_BranchAngle);
-	InterpretSystem(m_CurrentSentence,m_StartPosition, 4.0f, (25.7f * XM_PI) / 180);
+	InterpretSystem(m_CurrentSentence,m_StartPosition, m_BranchLength, m_BranchAngle, m_BranchStartRadius);
 }
 
-void FractalTree::InterpretSystem(std::string sentence, XMVECTOR startingPoint, float stepSize, float angleDelta)
+void FractalTree::InterpretSystem(std::string sentence, XMVECTOR startingPoint, float stepSize, float angleDelta, float branchRadius)
 {
 	TurtleState curState, nextState;
-	//curState.pos = startingPoint;
-	curState.pos = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
+	curState.pos = startingPoint;
+	//curState.pos = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 	curState.rotation = XMMatrixIdentity();
 	curState.stepSize = stepSize;
-	curState.radius = 1.0f;
+	curState.radius = branchRadius;
+	curState.nrInBranch = 0;
 
 	std::stack<int> indexStack;				//order of indexes to be rendered
 	std::stack<TurtleState> turtleStack;	//all points 
@@ -140,54 +167,54 @@ void FractalTree::InterpretSystem(std::string sentence, XMVECTOR startingPoint, 
 		nextState = curState;
 		XMVECTOR rotated = XMVector3Transform(curState.dir, rotMatrix);
 
+		float randomValue = static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (m_AngleRandomAmount * 2)));
+		randomValue -= m_AngleRandomAmount;
+
 		switch (c)
 		{
 		case 'F':
 		{
+			//NEW POINT
 			nextState.pos = XMVectorAdd(nextState.pos, XMVectorScale(rotated, curState.stepSize));
-
+			nextState.nrInBranch++;
 			
 			m_Models.push_back(new SimpleObject(cyl));
-			m_Models.back()->SetWorldMatrix(XMMatrixMultiply(XMMatrixMultiply(XMMatrixScaling(curState.radius / origRad, curState.stepSize / origStepSize, curState.radius / origRad), rotMatrix), XMMatrixTranslationFromVector(curState.pos)));
-			m_Models.back()->SetPosition(curState.pos);
+			float amount = pow(0.85f, curState.nrInBranch);
+			m_Models.back()->SetWorldMatrix(XMMatrixMultiply(XMMatrixMultiply(XMMatrixScaling((curState.radius * amount) / origRad, curState.stepSize / origStepSize, (curState.radius * amount) / origRad),
+				rotMatrix), XMMatrixTranslationFromVector(curState.pos)));
 			
-			break;
-		}
-		case 'f':
-		{
-			nextState.pos += curState.stepSize * rotated;
-			index = m_Indices.size(); //need to increase the index, in case we  go back or just so we don't draw where we shouldn't 
 			break;
 		}
 		case '+':
 		{
-			rotMatrix *= XMMatrixRotationAxis(rotMatrix.r[2], angleDelta);
+			
+			rotMatrix *= XMMatrixRotationAxis(rotMatrix.r[2], angleDelta + randomValue);
 			
 			break;
 		}
 		case '-':
 		{
-			rotMatrix *= XMMatrixRotationAxis(rotMatrix.r[2], -angleDelta);
+			rotMatrix *= XMMatrixRotationAxis(rotMatrix.r[2], -angleDelta + randomValue);
 			break;
 		}
 		case '&':
 		{
-			rotMatrix *= XMMatrixRotationAxis(rotMatrix.r[0], angleDelta);
+			rotMatrix *= XMMatrixRotationAxis(rotMatrix.r[0], angleDelta + randomValue);
 			break;
 		}
 		case '^':
 		{
-			rotMatrix *= XMMatrixRotationAxis(rotMatrix.r[0], -angleDelta);
+			rotMatrix *= XMMatrixRotationAxis(rotMatrix.r[0], -angleDelta + randomValue);
 			break;
 		}
 		case '\\':
 		{
-			rotMatrix *= XMMatrixRotationAxis(rotMatrix.r[1], angleDelta);
+			rotMatrix *= XMMatrixRotationAxis(rotMatrix.r[1], angleDelta + randomValue);
 			break;
 		}
 		case '/':
 		{
-			rotMatrix *= XMMatrixRotationAxis(rotMatrix.r[1], -angleDelta);
+			rotMatrix *= XMMatrixRotationAxis(rotMatrix.r[1], -angleDelta + randomValue);
 			break;
 		}
 		case '|':
@@ -197,8 +224,9 @@ void FractalTree::InterpretSystem(std::string sentence, XMVECTOR startingPoint, 
 		}
 		case '[':
 		{
-			//nextState.stepSize = curState.stepSize + 1.0f;
-			nextState.radius = curState.radius - 0.3f;
+			nextState.stepSize = curState.stepSize/4*2;
+			nextState.radius = curState.radius/4*3;
+			nextState.nrInBranch = curState.nrInBranch;
 			curState.rotation = rotMatrix;
 
 			//add new point and index
@@ -225,13 +253,17 @@ void FractalTree::InterpretSystem(std::string sentence, XMVECTOR startingPoint, 
 	}
 }
 
-bool FractalTree::Render(ID3D11DeviceContext* context)
+void FractalTree::ResetModels()
 {
+
 	for (size_t i = 0; i < m_Models.size(); i++)
 	{
-		m_Models[i]->Render(context);
+		delete m_Models[i];
+		m_Models[i] = nullptr;
 	}
-	
-	return true;
+	m_Models.clear();
+
+	m_Indices.clear();
 }
+
 

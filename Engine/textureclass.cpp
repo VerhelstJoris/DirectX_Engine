@@ -6,7 +6,7 @@
 
 TextureClass::TextureClass()
 {
-	m_Texture = 0;
+	m_DiffuseTexture = 0;
 }
 
 
@@ -26,7 +26,7 @@ bool TextureClass::Initialize(ID3D11Device* device, WCHAR* filename)
 
 
 	// Load the texture in.
-	result = D3DX11CreateShaderResourceViewFromFile(device, filename, NULL, NULL, &m_Texture, NULL);
+	result = D3DX11CreateShaderResourceViewFromFile(device, filename, NULL, NULL, &m_DiffuseTexture, NULL);
 	if(FAILED(result))
 	{
 		return false;
@@ -39,10 +39,10 @@ bool TextureClass::Initialize(ID3D11Device* device, WCHAR* filename)
 void TextureClass::Shutdown()
 {
 	// Release the texture resource.
-	if(m_Texture)
+	if(m_DiffuseTexture)
 	{
-		m_Texture->Release();
-		m_Texture = 0;
+		m_DiffuseTexture->Release();
+		m_DiffuseTexture = 0;
 	}
 
 	return;
@@ -51,5 +51,5 @@ void TextureClass::Shutdown()
 
 ID3D11ShaderResourceView* TextureClass::GetTexture()
 {
-	return m_Texture;
+	return m_DiffuseTexture;
 }

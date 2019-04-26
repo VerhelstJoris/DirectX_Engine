@@ -157,6 +157,8 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd, con
 		return false;
 	}
 
+	m_PostProcessingShader->Toggle();
+
 #pragma region RESOURCELOADING
 	//initialize the resource loader
 	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_HOUSE, L"../Engine/data/Textures/T_house.jpg");
@@ -186,6 +188,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd, con
 	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_SEAWEED, L"../Engine/data/Textures/T_Seaweed.BMP");
 	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::N_SEAWEED, L"../Engine/data/Textures/N_Seaweed.BMP");
 	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_SKY, L"../Engine/data/Textures/T_Sky.png");
+	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_WOOD, L"../Engine/data/Textures/T_Wood.png");
 
 
 	m_ResourceLoader.LoadModel(ModelID::HOUSE, L"../Engine/data/Models/house.txt");
@@ -530,14 +533,14 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd, con
 #endif // TERRAIN
 
 #ifdef PROCEDURAL
-	m_FractalTree = new FractalTree(m_D3D->GetDevice(), XMVECTOR{ 0.0f,15.0f,15.0f });
+	m_FractalTree = new FractalTree(m_D3D->GetDevice(), XMVECTOR{ 0.0f,0.0f,0.0f });
 	if (!m_FractalTree)
 	{
 		return false;
 	}
 
 	m_FractalTree->Generate();
-	m_FractalTree->SetDiffuseTexture(&m_ResourceLoader.GetTexture(TextureID::T_TREE));
+	m_FractalTree->SetDiffuseTexture(&m_ResourceLoader.GetTexture(TextureID::T_WOOD));
 	m_FractalTree->SetNormalTexture(&m_ResourceLoader.GetTexture(TextureID::N_TREE));
 	result = m_FractalTree->Initialize();
 	if (!result)
@@ -916,10 +919,10 @@ bool GraphicsClass::RenderScene(const GameContext& context)
 
 #ifdef PROCEDURAL
 	//m_FractalTree->Render(m_D3D->GetDeviceContext());
-	int amount = 0;
 
 	for (SimpleObject* object : m_FractalTree->GetModels())
 	{
+	
 		object->Render(m_D3D->GetDeviceContext());
 		//XMVECTOR pos = object->GetPosition();
 		//XMFLOAT3* posFloat= new XMFLOAT3(0,0,0);
@@ -934,8 +937,6 @@ bool GraphicsClass::RenderScene(const GameContext& context)
 			, viewMatrix, projectionMatrix,
 		textureArr, m_Light->GetDirection(), m_Light->GetDiffuseColor(), m_Light->GetAmbientColor(), context.camera->GetPosition(),
 		m_Light->GetSpecularColor(), m_Light->GetSpecularPower());	
-
-		amount++;
 	}
 	
 #endif // TREE

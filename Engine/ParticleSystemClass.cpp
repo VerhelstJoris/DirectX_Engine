@@ -6,7 +6,7 @@
 
 ParticleSystemClass::ParticleSystemClass()
 {
-	m_Texture = 0;
+	m_DiffuseTexture = 0;
 	m_particleList = 0;
 	m_Vertices = 0;
 	m_VertexBuffer = 0;
@@ -110,7 +110,7 @@ void ParticleSystemClass::Render(ID3D11DeviceContext* deviceContext)
 
 ID3D11ShaderResourceView* ParticleSystemClass::GetTexture()
 {
-	return m_Texture->GetTexture();
+	return m_DiffuseTexture->GetTexture();
 }
 
 int ParticleSystemClass::GetIndexCount()
@@ -124,14 +124,14 @@ bool ParticleSystemClass::LoadTexture(ID3D11Device* device, WCHAR* filename)
 
 
 	// Create the texture object.
-	m_Texture = new TextureClass;
-	if (!m_Texture)
+	m_DiffuseTexture = new TextureClass;
+	if (!m_DiffuseTexture)
 	{
 		return false;
 	}
 
 	// Initialize the texture object.
-	result = m_Texture->Initialize(device, filename);
+	result = m_DiffuseTexture->Initialize(device, filename);
 	if (!result)
 	{
 		return false;
@@ -143,11 +143,11 @@ bool ParticleSystemClass::LoadTexture(ID3D11Device* device, WCHAR* filename)
 void ParticleSystemClass::ReleaseTexture()
 {
 	// Release the texture object.
-	if (m_Texture)
+	if (m_DiffuseTexture)
 	{
-		m_Texture->Shutdown();
-		delete m_Texture;
-		m_Texture = 0;
+		m_DiffuseTexture->Shutdown();
+		delete m_DiffuseTexture;
+		m_DiffuseTexture = 0;
 	}
 
 	return;

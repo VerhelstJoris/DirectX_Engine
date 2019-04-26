@@ -7,7 +7,6 @@ SimpleObject::SimpleObject()
 	m_VertexBuffer = 0;
 	m_IndexBuffer = 0;
 	m_Model = 0;
-	m_Texture = 0;
 	m_WorldMatrix = XMMatrixIdentity();
 }
 
@@ -43,11 +42,7 @@ SimpleObject::~SimpleObject()
 	// Shutdown the vertex and index buffers.
 	ReleaseBuffers();
 
-	if (m_Texture)
-	{
-		m_Texture->Shutdown();
-		m_Texture = 0;
-	}
+
 }
 
  void SimpleObject::drawCurrent(ID3D11DeviceContext* context) const
