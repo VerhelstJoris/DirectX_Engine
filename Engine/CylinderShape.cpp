@@ -29,12 +29,13 @@ inline XMVECTOR CylinderShape::GetCircleVector(int i, int t)
 	return XMVectorSet(deltaX, 0, deltaZ, 0.f);
 }
 
-void CylinderShape::GenCaps(float r, float h, int t, bool isTop)
+void CylinderShape::GenCaps(float radius, float height, int tesselation, bool isTop)
 {
-	for (int i = 0; i < t - 2; ++i)
+
+	for (int i = 0; i < tesselation - 2; ++i)
 	{
-		int index1 = (i + 1) % t;
-		int index2 = (i + 2) % t;
+		int index1 = (i + 1) % tesselation;
+		int index2 = (i + 2) % tesselation;
 
 		if (isTop)
 		{
@@ -58,10 +59,10 @@ void CylinderShape::GenCaps(float r, float h, int t, bool isTop)
 		texScale = XMVectorMultiply(texScale, g_XMNegateX);
 	}
 
-	for (int i = 0; i < t; ++i)
+	for (int i = 0; i < tesselation; ++i)
 	{
-		XMVECTOR circleVec = GetCircleVector(i, t);
-		XMVECTOR position = XMVectorAdd(XMVectorScale(circleVec, r), XMVectorScale(normal, h));
+		XMVECTOR circleVec = GetCircleVector(i, tesselation);
+		XMVECTOR position = XMVectorAdd(XMVectorScale(circleVec, radius), XMVectorScale(normal, height));
 		XMVECTOR texCoord = XMVectorMultiplyAdd(XMVectorSwizzle<0, 2, 3, 3>(circleVec), texScale, g_XMOneHalf);
 		Vertex v;
 		XMStoreFloat3(&v.position, position);
@@ -71,23 +72,22 @@ void CylinderShape::GenCaps(float r, float h, int t, bool isTop)
 	}
 }
 
-void CylinderShape::GenCylinder(float r, float h, int t)
+void CylinderShape::GenCylinder(float radius, float height, int tesselation)
 {
 	m_Vertices.clear();
 	m_Indices.clear();
 
-	float height = float(h) / 2;
 
-	XMVECTOR offsetTop = XMVectorScale(g_XMIdentityR1, height);
+	XMVECTOR offsetTop = XMVECTOR{0,height,0,1};
 
-	int stride = t + 1;
+	int stride = tesselation + 1;
 
-	for (int i = 0; i <= t; ++i)
+	for (int i = 0; i <= tesselation; ++i)
 	{
-		XMVECTOR normal = GetCircleVector(i, t);
-		XMVECTOR offsetSide = XMVectorScale(normal, r);
+		XMVECTOR normal = GetCircleVector(i, tesselation);
+		XMVECTOR offsetSide = XMVectorScale(normal, radius);
 
-		float u = float(i) / t;
+		float u = float(i) / tesselation;
 
 		XMVECTOR texCoord = XMLoadFloat(&u);
 		Vertex vertex;
@@ -96,7 +96,7 @@ void CylinderShape::GenCylinder(float r, float h, int t)
 		XMStoreFloat2(&vertex.texCoord, texCoord);
 		m_Vertices.push_back(Vertex(vertex.position, vertex.normal, vertex.texCoord));
 
-		XMStoreFloat3(&vertex.position, XMVectorSubtract(offsetSide, offsetTop));
+		XMStoreFloat3(&vertex.position, offsetSide);
 		XMStoreFloat3(&vertex.normal, normal);
 		XMStoreFloat2(&vertex.texCoord, XMVectorAdd(texCoord, g_XMIdentityR1));
 		m_Vertices.push_back(Vertex(vertex.position, vertex.normal, vertex.texCoord));
@@ -110,8 +110,8 @@ void CylinderShape::GenCylinder(float r, float h, int t)
 		m_Indices.push_back(i * 2 + 1);
 	}
 
-	GenCaps(r, height, t, true);
-	GenCaps(r, height, t, false);
+	GenCaps(radius, height, tesselation, true);
+	//GenCaps(radius, height, tesselation, false);
 
 
 	for (size_t i = 0; i < m_Vertices.size(); i++)
@@ -149,27 +149,3 @@ void CylinderShape::Translate(XMVECTOR dir)
 	}
 }
 
-XMFLOAT3 CylinderShape::GetPosition(int i)
-{
-	return m_Vertices[i].position;
-}
-
-XMFLOAT2 CylinderShape::GetTexCoord(int i)
-{
-	return m_Vertices[i].texCoord;
-}
-
-XMFLOAT3 CylinderShape::GetNormal(int i)
-{
-	return m_Vertices[i].normal;
-}
-
-int CylinderShape::GetNumVertices()
-{
-	return m_Vertices.size();
-}
-
-std::vector<unsigned int> CylinderShape::GetIndices()
-{
-	return m_Indices;
-}

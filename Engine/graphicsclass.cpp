@@ -541,7 +541,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd, con
 
 	m_FractalTree->Generate();
 	m_FractalTree->SetDiffuseTexture(&m_ResourceLoader.GetTexture(TextureID::T_WOOD));
-	m_FractalTree->SetNormalTexture(&m_ResourceLoader.GetTexture(TextureID::N_TREE));
+	m_FractalTree->SetNormalTexture(&m_ResourceLoader.GetTexture(TextureID::N_SEAWEED));
 	result = m_FractalTree->Initialize();
 	if (!result)
 	{

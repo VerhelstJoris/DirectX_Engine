@@ -13,14 +13,23 @@ FractalTree::FractalTree(ID3D11Device* device, XMVECTOR startPosition)
 
 	//L_SYSTEM
 	//-------------------------------------------------
-	m_Axiom = "X";
-	m_CurrentSentence = m_Axiom;
 
-	m_Rules.push_back(new LSystemRule('X', "F[+X][-X][^X][&X]F","","",1.0f));
-	m_Rules.push_back(new LSystemRule('X', "F[-X][^X]F","","",0.6f));
-	m_Rules.push_back(new LSystemRule('F', "FF","0","",1.0f));
+	//RULESET 1
+	m_Axiom = "X";
+	m_Rules.push_back(new LSystemRule('X', "F[&FFFX]///[&FFFX]///[&FFFX]F","","",1.0f));
+	m_Rules.push_back(new LSystemRule('F', "FFF","0","",1.0f));
+
+
+
+	//m_Axiom = "X";
+
+	//m_Rules.push_back(new LSystemRule('X', "F[+X][-X][^X][&X]F","","",1.0f));
+	//m_Rules.push_back(new LSystemRule('X', "F[-X][^X]F","","",0.6f));
+	//m_Rules.push_back(new LSystemRule('F', "FF","0","",1.0f));
 
 	//
+	m_CurrentSentence = m_Axiom;
+
 	m_WorldMatrix = XMMatrixIdentity();
 	m_DiffuseTexture = 0;
 }
@@ -144,7 +153,6 @@ void FractalTree::InterpretSystem(std::string sentence, XMVECTOR startingPoint, 
 {
 	TurtleState curState, nextState;
 	curState.pos = startingPoint;
-	//curState.pos = XMVectorSet(0.0f, 0.0f, 0.0f, 1.0f);
 	curState.rotation = XMMatrixIdentity();
 	curState.stepSize = stepSize;
 	curState.radius = branchRadius;
@@ -159,6 +167,7 @@ void FractalTree::InterpretSystem(std::string sentence, XMVECTOR startingPoint, 
 	float origRad = curState.radius;		//radius branch
 	float origStepSize = curState.stepSize;	//length branch
 
+	//generate the shape and size of the branch
 	CylinderShape cyl;
 	cyl.GenCylinder(origRad, origStepSize, 24);
 	

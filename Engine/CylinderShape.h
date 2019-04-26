@@ -33,12 +33,12 @@ public:
 	void Rotate(XMMATRIX);
 	void Translate(XMVECTOR);
 
-	XMFLOAT3 GetPosition(int);
-	XMFLOAT2 GetTexCoord(int);
-	XMFLOAT3 GetNormal(int);
+	XMFLOAT3 GetPosition(int i){return m_Vertices[i].position;}
+	XMFLOAT2 GetTexCoord(int i){return m_Vertices[i].texCoord;}
+	XMFLOAT3 GetNormal(int i){return m_Vertices[i].normal;}
 
-	int GetNumVertices();
-	std::vector<unsigned int> GetIndices();
+	int GetNumVertices(){return m_Vertices.size();}
+	std::vector<unsigned int> GetIndices(){return m_Indices;}
 
 private:
 	inline XMVECTOR GetCircleVector(int, int);
