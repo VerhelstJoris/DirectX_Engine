@@ -51,6 +51,7 @@ public:
 	//get
 	int GetIndexCount() { return m_Indices.size(); };
 	XMMATRIX GetWorldMatrix() { return m_WorldMatrix; };
+	int GetAmountOfRuleSets() { return m_RuleSets.size(); };
 
 	std::vector<SimpleObject*> GetBranchModels() { return m_BranchModels; };
 	std::vector<SimpleObject*> GetLeafModels() { return m_LeafModels; };
@@ -62,6 +63,8 @@ public:
 	ID3D11ShaderResourceView* GetLeafNormalTexture() { return m_LeafNormalTexture->GetTexture(); };
 
 	float GetBranchLength() { return m_BranchLength; };
+	int GetAmountOfIterations() { return m_AmountOfIterations; };
+	int GetRuleSetId() { return m_CurrentRuleSet; };
 
 	//set
 	void SetWorldMatrix(XMMATRIX world) { m_WorldMatrix = world; };
@@ -77,6 +80,7 @@ public:
 	void SetBranchLength(float length) { m_BranchLength = length; };
 	void SetBranchStartRadius(float radius) { m_BranchStartRadius = radius; };
 
+	void SetRuleSet(int id);
 	void NextRuleSet();
 
 private:
@@ -101,10 +105,12 @@ private:
 	std::vector<RuleSet*> m_RuleSets;
 
 	int m_CurrentRuleSet=0;
+	int m_AmountOfIterations = 0;
 
 	//tree visual variables
 	float m_BranchStartRadius = 0.5f;
 	float m_BranchLength = 4.0f;
+	float m_BranchStartLength = 4.0f;
 	float m_BranchAngle = (25.0f * XM_PI) / 180;
 	float m_AngleRandomAmount = (15.0f * XM_PI) / 180;
 

@@ -161,6 +161,9 @@ void FractalTree::Generate()
 
 				if (contextCorrect)
 				{
+					std::cout << "RULE APPLIED" << std::endl;
+
+
 					if (!(m_PrevRuleUsed && m_PrevSymbol == ruleSymbol))	//stochaistic
 					{
 						float random = (float)rand() / (float)(RAND_MAX / 1.0f);
@@ -195,9 +198,8 @@ void FractalTree::Generate()
 	}
 
 	m_CurrentSentence = nextSentence;
-   	std::cout << "new sentence: " + m_CurrentSentence << std::endl;
+	m_AmountOfIterations++;
 
-	//GenerateLines(m_CurrentSentence , m_StartPosition,  m_BranchLength,m_BranchAngle);
 	InterpretSystem(m_CurrentSentence,m_StartPosition, m_BranchLength, m_BranchAngle, m_BranchStartRadius);
 }
 
@@ -361,13 +363,38 @@ void FractalTree::ResetModels()
 
 void FractalTree::NextRuleSet()
 {
+	m_AmountOfIterations = 0;
+	m_BranchLength = m_BranchStartLength;
+
 	m_CurrentRuleSet++;
 	if (m_CurrentRuleSet >= m_RuleSets.size())
 	{
 		m_CurrentRuleSet = 0;
 	}
+
 	m_Axiom = m_RuleSets[m_CurrentRuleSet]->axiom;
 	m_CurrentSentence = m_Axiom;
+
+	std::cout << m_CurrentSentence << std::endl;
+	m_PrevSymbol = '0';
+	m_PrevRuleUsed = false;
+
+
+	Generate();
+	Initialize();
+}
+
+void FractalTree::SetRuleSet(int id)
+{
+	m_AmountOfIterations = 0;
+	m_BranchLength = m_BranchStartLength;
+
+	m_CurrentRuleSet=id;
+	
+	m_Axiom = m_RuleSets[m_CurrentRuleSet]->axiom;
+	m_CurrentSentence = m_Axiom;
+	m_PrevSymbol = '0';
+	m_PrevRuleUsed = false;
 
 	Generate();
 	Initialize();

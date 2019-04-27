@@ -69,6 +69,7 @@ enum class TextureID
 	T_SKY,
 	T_WOOD,
 	T_LEAF,
+	T_RED,
 
 	N_HOUSE,
 	N_DOOR,
