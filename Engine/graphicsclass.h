@@ -68,6 +68,8 @@ private:
 	bool RenderToTexture(const GameContext& context);
 	bool RenderScene(const GameContext& context);
 
+
+
 private:
 	D3DClass* m_D3D;
 	std::vector<GameObject*> m_GameObjects;

@@ -247,12 +247,12 @@ void GameObject::RenderBuffers(ID3D11DeviceContext* deviceContext)
 }
 
 
-ID3D11ShaderResourceView* GameObject::GetDiffuseTexture()
+ID3D11ShaderResourceView* GameObject::GetBranchDiffuseTexture()
 {
 	return m_DiffuseTexture->GetTexture();
 }
 
-ID3D11ShaderResourceView* GameObject::GetNormalTexture()
+ID3D11ShaderResourceView* GameObject::GetBranchNormalTexture()
 {
 	return m_NormalTexture->GetTexture();
 }

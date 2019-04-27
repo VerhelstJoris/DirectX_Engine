@@ -67,8 +67,8 @@ public:
 	D3DXVECTOR3 GetPosition();
 	D3DXVECTOR3 GetRotation();
 
-	ID3D11ShaderResourceView* GetDiffuseTexture();
-	ID3D11ShaderResourceView* GetNormalTexture();
+	ID3D11ShaderResourceView* GetBranchDiffuseTexture();
+	ID3D11ShaderResourceView* GetBranchNormalTexture();
 
 
 protected:

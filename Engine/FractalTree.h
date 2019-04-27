@@ -34,6 +34,12 @@ private:
 		XMFLOAT3 normal;
 	};
 
+	struct RuleSet
+	{
+		std::string axiom;
+		std::vector<LSystemRule*> rules;
+	};
+
 public:
 	FractalTree(ID3D11Device* device, XMVECTOR startPosition);
 	~FractalTree();
@@ -42,17 +48,28 @@ public:
 	void ShutDown();
 	bool Initialize();
 
+	//get
 	int GetIndexCount() { return m_Indices.size(); };
 	XMMATRIX GetWorldMatrix() { return m_WorldMatrix; };
 
-	std::vector<SimpleObject*> GetModels() { return m_Models; };
-	ID3D11ShaderResourceView* GetDiffuseTexture() { return m_DiffuseTexture->GetTexture(); };
-	ID3D11ShaderResourceView* GetNormalTexture() { return m_NormalTexture->GetTexture(); };
+	std::vector<SimpleObject*> GetBranchModels() { return m_BranchModels; };
+	std::vector<SimpleObject*> GetLeafModels() { return m_LeafModels; };
 
+	ID3D11ShaderResourceView* GetBranchDiffuseTexture() { return m_DiffuseTexture->GetTexture(); };
+	ID3D11ShaderResourceView* GetBranchNormalTexture() { return m_NormalTexture->GetTexture(); };
 
+	ID3D11ShaderResourceView* GetLeafDiffuseTexture() { return m_LeafDiffuseTexture->GetTexture(); };
+	ID3D11ShaderResourceView* GetLeafNormalTexture() { return m_LeafNormalTexture->GetTexture(); };
+
+	float GetBranchLength() { return m_BranchLength; };
+
+	//set
 	void SetWorldMatrix(XMMATRIX world) { m_WorldMatrix = world; };
-	void SetDiffuseTexture(TextureClass* texture) { m_DiffuseTexture = texture; };
-	void SetNormalTexture(TextureClass* texture) { m_NormalTexture = texture; };
+	void SetBranchDiffuseTexture(TextureClass* texture) { m_DiffuseTexture = texture; };
+	void SetBranchNormalTexture(TextureClass* texture) { m_NormalTexture = texture; };
+
+	void SetLeafDiffuseTexture(TextureClass* texture) { m_LeafDiffuseTexture = texture; };
+	void SetLeafNormalTexture(TextureClass* texture) { m_LeafNormalTexture = texture; };
 
 	void SetStartPosition(XMVECTOR start) { m_StartPosition = start; };
 	void SetBranchAngleRandomAmount(float angleInDegrees) {m_AngleRandomAmount = (angleInDegrees * XM_PI) / 180;};
@@ -60,7 +77,7 @@ public:
 	void SetBranchLength(float length) { m_BranchLength = length; };
 	void SetBranchStartRadius(float radius) { m_BranchStartRadius = radius; };
 
-	float GetBranchLength() { return m_BranchLength; };
+	void NextRuleSet();
 
 private:
 	void ResetModels();
@@ -69,9 +86,10 @@ private:
 	//variables
 	ID3D11Device* m_Device;
 	ID3D11Buffer* m_VertexBuffer, *m_IndexBuffer;
-	TextureClass* m_DiffuseTexture , *m_NormalTexture;
+	TextureClass* m_DiffuseTexture , *m_NormalTexture, *m_LeafDiffuseTexture, *m_LeafNormalTexture;
 
-	std::vector<SimpleObject*> m_Models;
+	std::vector<SimpleObject*> m_BranchModels;
+	std::vector<SimpleObject*> m_LeafModels;
 	char m_PrevSymbol = '0';
 	bool m_PrevRuleUsed = false;
 
@@ -80,7 +98,9 @@ private:
 	std::string m_CurrentSentence;
 
 	//rules
-	std::vector<LSystemRule*> m_Rules;
+	std::vector<RuleSet*> m_RuleSets;
+
+	int m_CurrentRuleSet=0;
 
 	//tree visual variables
 	float m_BranchStartRadius = 0.5f;

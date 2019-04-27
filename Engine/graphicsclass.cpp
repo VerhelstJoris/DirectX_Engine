@@ -189,6 +189,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd, con
 	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::N_SEAWEED, L"../Engine/data/Textures/N_Seaweed.BMP");
 	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_SKY, L"../Engine/data/Textures/T_Sky.png");
 	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_WOOD, L"../Engine/data/Textures/T_Wood.png");
+	m_ResourceLoader.LoadTexture(m_D3D->GetDevice(), TextureID::T_LEAF, L"../Engine/data/Textures/T_Leaf.png");
 
 
 	m_ResourceLoader.LoadModel(ModelID::HOUSE, L"../Engine/data/Models/house.txt");
@@ -540,8 +541,11 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd, con
 	}
 
 	m_FractalTree->Generate();
-	m_FractalTree->SetDiffuseTexture(&m_ResourceLoader.GetTexture(TextureID::T_WOOD));
-	m_FractalTree->SetNormalTexture(&m_ResourceLoader.GetTexture(TextureID::N_SEAWEED));
+	m_FractalTree->SetBranchDiffuseTexture(&m_ResourceLoader.GetTexture(TextureID::T_WOOD));
+	m_FractalTree->SetBranchNormalTexture(&m_ResourceLoader.GetTexture(TextureID::N_SEAWEED));
+	m_FractalTree->SetLeafDiffuseTexture(&m_ResourceLoader.GetTexture(TextureID::T_LEAF));
+	m_FractalTree->SetLeafNormalTexture(&m_ResourceLoader.GetTexture(TextureID::N_SEAWEED));
+
 	result = m_FractalTree->Initialize();
 	if (!result)
 	{
@@ -769,10 +773,16 @@ bool GraphicsClass::Frame(const GameContext& context)
 
 	if (context.input->IsKeypressed(VK_SPACE))
 	{
-		m_FractalTree->SetBranchLength(m_FractalTree->GetBranchLength()+1);
+		m_FractalTree->SetBranchLength(m_FractalTree->GetBranchLength()+0.5f);
 		m_FractalTree->Generate();
 		m_FractalTree->Initialize();
 	}
+
+	if (context.input->IsKeypressed('N'))
+	{
+		m_FractalTree->NextRuleSet();
+	}
+
 
 #endif 
 
@@ -921,23 +931,34 @@ bool GraphicsClass::RenderScene(const GameContext& context)
 #ifdef PROCEDURAL
 	//m_FractalTree->Render(m_D3D->GetDeviceContext());
 
-	for (SimpleObject* object : m_FractalTree->GetModels())
+	for (SimpleObject* object : m_FractalTree->GetBranchModels())
 	{
 	
 		object->Render(m_D3D->GetDeviceContext());
-		//XMVECTOR pos = object->GetPosition();
-		//XMFLOAT3* posFloat= new XMFLOAT3(0,0,0);
-		//XMStoreFloat3(posFloat, pos);
-		//std::cout << "POSITION: " << posFloat->x << ", " << posFloat->y << ", " << posFloat->z << std::endl;
 
 		ID3D11ShaderResourceView* textureArr[2];
-		textureArr[0] = m_FractalTree->GetDiffuseTexture();
-		textureArr[1] = m_FractalTree->GetNormalTexture();
+		textureArr[0] = m_FractalTree->GetBranchDiffuseTexture();
+		textureArr[1] = m_FractalTree->GetBranchNormalTexture();
 
 		result = m_LightShader->Render(m_D3D->GetDeviceContext(), object->GetIndexCount(), *reinterpret_cast<D3DXMATRIX*>(&object->GetWorldMatrix())
 			, viewMatrix, projectionMatrix,
 		textureArr, m_Light->GetDirection(), m_Light->GetDiffuseColor(), m_Light->GetAmbientColor(), context.camera->GetPosition(),
 		m_Light->GetSpecularColor(), m_Light->GetSpecularPower());	
+	}
+
+	for (SimpleObject* object : m_FractalTree->GetLeafModels())
+	{
+
+		object->Render(m_D3D->GetDeviceContext());
+
+		ID3D11ShaderResourceView* textureArr[2];
+		textureArr[0] = m_FractalTree->GetLeafDiffuseTexture();
+		textureArr[1] = m_FractalTree->GetLeafNormalTexture();
+
+		result = m_LightShader->Render(m_D3D->GetDeviceContext(), object->GetIndexCount(), *reinterpret_cast<D3DXMATRIX*>(&object->GetWorldMatrix())
+			, viewMatrix, projectionMatrix,
+			textureArr, m_Light->GetDirection(), m_Light->GetDiffuseColor(), m_Light->GetAmbientColor(), context.camera->GetPosition(),
+			m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
 	}
 	
 #endif // TREE
