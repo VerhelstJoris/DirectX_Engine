@@ -62,8 +62,10 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd, con
 	}
 
 	// Initialize a base view matrix with the camera for 2D user interface rendering.
-	context.camera->SetPosition(-13.75, 7.5f, 13.25f);
-	context.camera->SetRotation(15.0f, 150.0f, 0.0f);
+	//context.camera->SetPosition(-13.75, 7.5f, 13.25f);
+	//context.camera->SetRotation(15.0f, 150.0f, 0.0f);
+	context.camera->SetPosition(10.0f, 10.0f, -40.0f);
+
 
 	context.camera->Render();
 	context.camera->GetViewMatrix(baseViewMatrix);
@@ -159,7 +161,19 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd, con
 		return false;
 	}
 
+	//controls
+	std::cout << "CAMERA:" << std::endl << "	WASD to move camera, hold Left mouse button and drag mouse to rotate camera" << std::endl;
+	std::cout << "GAME:" << std::endl << "	SPACEBAR to grow the green L-system, N to switch to the next rule set and G to guess" << std::endl;
+	std::cout << "POST-PROCESSING: " << std::endl << 
+		"	NUMPAD 0: Toggle the effect on and off" <<std::endl << 
+		"	NUMPAD 1 and 2: increase and decrease the overall brightness" << std::endl << 
+		"	NUMPAD 4 and 5: increase and decrease moving bar speed" << std::endl <<
+		"	NUMPAD 7 and 8: increase and decrease amount of bars" << std::endl <<
+		"	NUMPAD 3 and 6: increase and decrease how distorted the screen is" << std::endl;
+		
+
 	m_PostProcessingShader->Toggle();
+
 
 #pragma region RESOURCELOADING
 	//initialize the resource loader
@@ -574,8 +588,8 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd, con
 
 	m_ShowCaseRuleSetId = rand() % m_ShowCaseTree->GetAmountOfRuleSets();
 	m_ShowCaseIterations = rand() % 3+1;
-	std::cout << m_ShowCaseRuleSetId << std::endl;
-	std::cout << m_ShowCaseIterations << std::endl;
+	//std::cout << m_ShowCaseRuleSetId << std::endl;
+	//std::cout << m_ShowCaseIterations << std::endl;
 
 	m_ShowCaseTree->SetRuleSet(m_ShowCaseRuleSetId);
 	for (size_t i = 0; i < m_ShowCaseIterations; i++)
@@ -796,6 +810,7 @@ bool GraphicsClass::Frame(const GameContext& context)
 
 	m_PostProcessingShader->UpdateTimer(context.deltaTime);
 
+
 #ifdef TERRAIN
 
 	if (context.input->IsKeyDown(VK_SPACE))
@@ -825,6 +840,7 @@ bool GraphicsClass::Frame(const GameContext& context)
 	{
 		if (m_FractalTree->GetAmountOfIterations()-1 == m_ShowCaseIterations && m_FractalTree->GetRuleSetId() == m_ShowCaseRuleSetId)
 		{
+			std::cout << std::endl << "========================" << std::endl;
 			std::cout << "Correct Guess" << std::endl;
 			m_Points++;
 			std::cout << "POINT TOTAL: " << m_Points << std::endl;
@@ -844,7 +860,7 @@ bool GraphicsClass::Frame(const GameContext& context)
 		}
 		else
 		{
-			std::cout << "Incorrect Guess" << std::endl;
+			std::cout <<std::endl << "========================" << std::endl << "Incorrect Guess" << std::endl;
 			m_Points--;
 			std::cout << "POINT TOTAL: " << m_Points << std::endl;
 

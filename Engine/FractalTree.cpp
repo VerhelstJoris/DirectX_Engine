@@ -161,8 +161,6 @@ void FractalTree::Generate()
 
 				if (contextCorrect)
 				{
-					std::cout << "RULE APPLIED" << std::endl;
-
 
 					if (!(m_PrevRuleUsed && m_PrevSymbol == ruleSymbol))	//stochaistic
 					{
@@ -375,7 +373,7 @@ void FractalTree::NextRuleSet()
 	m_Axiom = m_RuleSets[m_CurrentRuleSet]->axiom;
 	m_CurrentSentence = m_Axiom;
 
-	std::cout << m_CurrentSentence << std::endl;
+	//std::cout << m_CurrentSentence << std::endl;
 	m_PrevSymbol = '0';
 	m_PrevRuleUsed = false;
 

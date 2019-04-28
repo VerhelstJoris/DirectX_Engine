@@ -87,7 +87,7 @@ void CameraClass::CreatePostProcessingViewMatrix()
 	D3DXMatrixLookAtLH(&m_viewMatrix, &position, &pos, &up);
 
 	D3DXMatrixLookAtLH(&m_postViewMatrix, &position, &lookAt, &up);
-	std::cout << "post processing view matrix created" << std::endl;
+	//std::cout << "post processing view matrix created" << std::endl;
 }
 
 void CameraClass::Render()
