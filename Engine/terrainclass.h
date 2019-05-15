@@ -46,7 +46,8 @@ public:
 	void Shutdown();
 	void Render(ID3D11DeviceContext*);
 	bool GenerateHeightMap(ID3D11Device* device, bool keydown);
-	bool GeneratePerlinHeightMap(ID3D11Device* device, bool keydown);
+	bool GeneratePerlinHeightMap(ID3D11Device* device, bool keydown, float maxHeight);
+	bool Smoothen(ID3D11Device* device);
 	int  GetIndexCount();
 
 private:
@@ -63,7 +64,6 @@ private:
 
 	
 private:
-	bool m_terrainGeneratedToggle;
 	int m_terrainWidth, m_terrainHeight;
 	int m_VertexCount, m_IndexCount;
 	ID3D11Buffer *m_VertexBuffer, *m_IndexBuffer;

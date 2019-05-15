@@ -11,7 +11,6 @@ TerrainClass::TerrainClass()
 	m_VertexBuffer = 0;
 	m_IndexBuffer = 0;
 	m_heightMap = 0;
-	m_terrainGeneratedToggle = false;
 }
 
 
@@ -143,131 +142,87 @@ float TerrainClass::GetRandomFloat(float min, float max)
 bool TerrainClass::GenerateHeightMap(ID3D11Device* device, bool keydown)
 {
 
-	bool result;
 	//the toggle is just a bool that I use to make sure this is only called ONCE when you press a key
 	//until you release the key and start again. We dont want to be generating the terrain 500
 	//times per second. 
-	if(keydown&&(!m_terrainGeneratedToggle))
-	{
-		int index;
-		float height = 0.0;
-		
-
-		//loop through the terrain and set the hieghts how we want. This is where we generate the terrain
-		//in this case I will run a sin-wave through the terrain in one axis.
-
- 		for(int j=0; j<m_terrainHeight; j++)
-		{
-			for(int i=0; i<m_terrainWidth; i++)
-			{			
-				index = (m_terrainHeight * j) + i;
-
-				m_heightMap[index].x = (float)i;
-				m_heightMap[index].y = (float)((sin((float)j/(m_terrainWidth/20))*3.0)* (cos((float)i / (m_terrainHeight / 25))*4.0) - ((sin((float)i / (m_terrainWidth / 12))*3.0)* (cos((float)j / (m_terrainHeight / 25))*4.0)))*0.5; //magic numbers ahoy, just to ramp up the height of the sin function so its visible.
-				m_heightMap[index].y += GetRandomFloat(-5.0f,15.0f);
-				m_heightMap[index].z = (float)j;
-			}
-		}
-
-		result = CalculateNormals();
-		if(!result)
-		{
-			return false;
-		}
-
-		// Initialize the vertex and index buffer that hold the geometry for the terrain.
-		result = InitializeBuffers(device);
-		if(!result)
-		{
-			return false;
-		}
-
-		m_terrainGeneratedToggle = true;
-	}
-	else if(keydown)
-	{
-		//m_terrainGeneratedToggle = false;
-
-		//smooth
-
-		int index;
-
-		for (int j = 0; j < m_terrainHeight; j++)
-		{
-			for (int i = 0; i < m_terrainWidth; i++)
-			{
-				index = (m_terrainHeight * j) + i;
-				//out of bounds checks needed
-				m_heightMap[index].y = (m_heightMap[index].y + m_heightMap[index-1].y + m_heightMap[index+1].y)/3.0f;
-
-			}
-		}
-
-
-		result = CalculateNormals();
-		if (!result)
-		{
-			return false;
-		}
-
-		// Initialize the vertex and index buffer that hold the geometry for the terrain.
-		result = InitializeBuffers(device);
-		if (!result)
-		{
-			return false;
-		}
-
-	}
-
 	
+	int index;
+	float height = 0.0;
+	
+
+	//loop through the terrain and set the hieghts how we want. This is where we generate the terrain
+	//in this case I will run a sin-wave through the terrain in one axis.
+
+ 	for(int j=0; j<m_terrainHeight; j++)
+	{
+		for(int i=0; i<m_terrainWidth; i++)
+		{			
+			index = (m_terrainHeight * j) + i;
+
+			m_heightMap[index].x = (float)i;
+			m_heightMap[index].y = (float)((sin((float)j/(m_terrainWidth/20))*3.0)* (cos((float)i / (m_terrainHeight / 25))*4.0) - ((sin((float)i / (m_terrainWidth / 12))*3.0)* (cos((float)j / (m_terrainHeight / 25))*4.0)))*0.5; //magic numbers ahoy, just to ramp up the height of the sin function so its visible.
+			m_heightMap[index].y += GetRandomFloat(-5.0f,15.0f);
+			m_heightMap[index].z = (float)j;
+		}
+	}
+
+	bool result = CalculateNormals();
+	if(!result)
+	{
+		return false;
+	}
+
+	// Initialize the vertex and index buffer that hold the geometry for the terrain.
+	result = InitializeBuffers(device);
+	if(!result)
+	{
+		return false;
+	}
 
 
 	return true;
 }
 
-bool TerrainClass::GeneratePerlinHeightMap(ID3D11Device* device, bool keydown)
+bool TerrainClass::GeneratePerlinHeightMap(ID3D11Device* device, bool keydown, float maxHeight)
 {
 	bool result;
 
 	PerlinNoise pn;
 
-	if (keydown && (!m_terrainGeneratedToggle))
+	
+	//generate the terrain for the first time
+	int index;
+
+
+	//loop through the terrain and set the hieghts how we want. This is where we generate the terrain
+	//in this case I will run a sin-wave through the terrain in one axis.
+
+	for (int j = 0; j < m_terrainHeight; j++)
 	{
-		//generate the terrain for the first time
-		int index;
-		float height = 0.0;
-
-
-		//loop through the terrain and set the hieghts how we want. This is where we generate the terrain
-		//in this case I will run a sin-wave through the terrain in one axis.
-
-		for (int j = 0; j < m_terrainHeight; j++)
+		for (int i = 0; i < m_terrainWidth; i++)
 		{
-			for (int i = 0; i < m_terrainWidth; i++)
-			{
-				index = (m_terrainHeight * j) + i;
+			index = (m_terrainHeight * j) + i;
 
-				m_heightMap[index].x = (float)i;
-				m_heightMap[index].y = pn.Noise(10 * i, 10 * j, 0.8);
-				m_heightMap[index].z = (float)j;
-			}
+			m_heightMap[index].x = (float)i;
+			m_heightMap[index].y = pn.Noise(10 * i, 10 * j, 0.8) * maxHeight;
+			m_heightMap[index].z = (float)j;
 		}
-
-		result = CalculateNormals();
-		if (!result)
-		{
-			return false;
-		}
-
-		// Initialize the vertex and index buffer that hold the geometry for the terrain.
-		result = InitializeBuffers(device);
-		if (!result)
-		{
-			return false;
-		}
-
-		m_terrainGeneratedToggle = true;
 	}
+
+	result = CalculateNormals();
+	if (!result)
+	{
+		return false;
+	}
+
+	// Initialize the vertex and index buffer that hold the geometry for the terrain.
+	result = InitializeBuffers(device);
+	if (!result)
+	{
+		return false;
+	}
+
+	
 
 	return true;
 }
@@ -704,4 +659,37 @@ void TerrainClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	return;
+}
+
+bool TerrainClass::Smoothen(ID3D11Device* device)
+{
+	int index;
+	bool result;
+
+	for (int j = 0; j < m_terrainHeight; j++)
+	{
+		for (int i = 0; i < m_terrainWidth; i++)
+		{
+			index = (m_terrainHeight * j) + i;
+			//out of bounds checks needed
+			m_heightMap[index].y = (m_heightMap[index].y + m_heightMap[index - 1].y + m_heightMap[index + 1].y) / 3.0f;
+
+		}
+	}
+
+
+	result = CalculateNormals();
+	if (!result)
+	{
+		return false;
+	}
+
+	// Initialize the vertex and index buffer that hold the geometry for the terrain.
+	result = InitializeBuffers(device);
+	if (!result)
+	{
+		return false;
+	}
+
+	return true;
 }

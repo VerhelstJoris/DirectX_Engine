@@ -26,6 +26,7 @@ FractalTree::FractalTree(ID3D11Device* device, XMVECTOR startPosition)
 	rules2->rules.push_back(new LSystemRule('X', "F[+X][&-X]F[^X][&X]F", "", "", 1.0f));
 	rules2->rules.push_back(new LSystemRule('&', "FL[&+XL|FL][^-XL\FL][^FXL]F", "", "", 0.8f));
 	rules2->rules.push_back(new LSystemRule('F', "FF", "0", "", 0.5f));
+	rules2->rules.push_back(new LSystemRule('F', "F[+X][&-X]F", "0", "", 1.0f));
 	m_RuleSets.push_back(rules2);
 
 

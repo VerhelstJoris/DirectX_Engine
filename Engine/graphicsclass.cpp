@@ -8,7 +8,7 @@
 #include <ctime>
 
 
-//#define TERRAIN
+#define TERRAIN
 //#define GRAPHICS
 #define PROCEDURAL
 
@@ -521,7 +521,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd, con
 
 	// Initialize the terrain object.
 	//result = m_Terrain->Initialize(m_D3D->GetDevice(), "../Engine/data/heightmap01.bmp");
-	result = m_Terrain->InitializeTerrain(m_D3D->GetDevice(), 128, 128);   //initialise the flat terrain.
+	result = m_Terrain->InitializeTerrain(m_D3D->GetDevice(), 64, 64);   //initialise the flat terrain.
 	if (!result)
 	{
 		MessageBox(hwnd, L"Could not initialize the terrain object.", L"Error", MB_OK);
@@ -530,7 +530,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd, con
 	else
 	{
 		//m_Terrain->GenerateHeightMap(m_D3D->GetDevice(), true);
-		m_Terrain->GeneratePerlinHeightMap(m_D3D->GetDevice(), true);
+		m_Terrain->GeneratePerlinHeightMap(m_D3D->GetDevice(), true, 5.0f);
 	}
 
 	// Create the terrain shader object.
@@ -813,9 +813,15 @@ bool GraphicsClass::Frame(const GameContext& context)
 
 #ifdef TERRAIN
 
-	if (context.input->IsKeyDown(VK_SPACE))
+	//smoothen
+	if (context.input->IsKeyDown('J'))
 	{
-		m_Terrain->GenerateHeightMap(m_D3D->GetDevice(),true);
+		//m_Terrain->Smoothen(m_D3D->GetDevice());
+	}
+	
+	if (context.input->IsKeyDown('K'))
+	{
+		//m_Terrain->GenerateHeightMap(m_D3D->GetDevice(), true);
 	}
 
 #endif // TERRAIN
