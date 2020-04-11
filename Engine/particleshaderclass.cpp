@@ -30,7 +30,7 @@ bool ParticleShaderClass::Initialize(ID3D11Device* device, HWND hwnd)
 
 
 	// Initialize the vertex and pixel shaders.
-	result = InitializeShader(device, hwnd, L"../Engine/particleVS.hlsl", L"../Engine/particlePS.hlsl");
+	result = InitializeShader(device, hwnd, L"data/Shaders/particleVS.hlsl", L"data/Shaders/particlePS.hlsl");
 	if(!result)
 	{
 		return false;

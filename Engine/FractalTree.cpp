@@ -197,6 +197,7 @@ void FractalTree::Generate()
 	}
 
 	m_CurrentSentence = nextSentence;
+	//std::cout << m_CurrentSentence << std::endl;
 	m_AmountOfIterations++;
 
 	InterpretSystem(m_CurrentSentence,m_StartPosition, m_BranchLength, m_BranchAngle, m_BranchStartRadius);
