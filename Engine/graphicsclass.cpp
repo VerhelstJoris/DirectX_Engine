@@ -163,7 +163,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd, con
 	
 	if (m_SceneSelect == GraphicsScenes::PROCEDURAL)
 	{
-		std::cout << "L-System:" << std::endl << "	SPACEBAR to grow the green L-system, N to switch to the next rule set and G to guess" << std::endl;
+		std::cout << "L-System:" << std::endl << "	SPACEBAR to grow the L-system, N to switch to the next rule set" << std::endl;
 	}
 
 	if (m_SceneSelect == GraphicsScenes::DIORAMA)
@@ -574,40 +574,6 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd, con
 			MessageBox(hwnd, L"Could not initialize the Fractal Tree.", L"Error", MB_OK);
 			return false;
 		}
-
-		//SHOWCASE FRACTALTREE
-		m_ShowCaseTree = new FractalTree(m_D3D->GetDevice(), XMVECTOR{ 25.0f,0.0f,0.0f });
-		if (!m_ShowCaseTree)
-		{
-			return false;
-		}
-
-		srand(time(NULL));
-
-		m_ShowCaseTree->SetBranchDiffuseTexture(&m_ResourceLoader.GetTexture(TextureID::T_WOOD));
-		m_ShowCaseTree->SetBranchNormalTexture(&m_ResourceLoader.GetTexture(TextureID::N_SEAWEED));
-		m_ShowCaseTree->SetLeafDiffuseTexture(&m_ResourceLoader.GetTexture(TextureID::T_RED));
-		m_ShowCaseTree->SetLeafNormalTexture(&m_ResourceLoader.GetTexture(TextureID::N_SEAWEED));
-
-
-		m_ShowCaseRuleSetId = rand() % m_ShowCaseTree->GetAmountOfRuleSets();
-		m_ShowCaseIterations = rand() % 3 + 1;
-		//std::cout << m_ShowCaseRuleSetId << std::endl;
-		//std::cout << m_ShowCaseIterations << std::endl;
-
-		m_ShowCaseTree->SetRuleSet(m_ShowCaseRuleSetId);
-		for (size_t i = 0; i < m_ShowCaseIterations; i++)
-		{
-			m_ShowCaseTree->SetBranchLength(m_ShowCaseTree->GetBranchLength() + 0.5f);
-			m_ShowCaseTree->Generate();
-		}
-
-		result = m_ShowCaseTree->Initialize();
-		if (!result)
-		{
-			MessageBox(hwnd, L"Could not initialize the Showcase Tree.", L"Error", MB_OK);
-			return false;
-		}
 	}
 
 	return true;
@@ -844,36 +810,6 @@ bool GraphicsClass::Frame(const GameContext& context)
 			m_FractalTree->NextRuleSet();
 		}
 
-		if (context.input->IsKeypressed('G'))
-		{
-			if (m_FractalTree->GetAmountOfIterations() - 1 == m_ShowCaseIterations && m_FractalTree->GetRuleSetId() == m_ShowCaseRuleSetId)
-			{
-				std::cout << std::endl << "========================" << std::endl;
-				std::cout << "Correct Guess" << std::endl;
-				m_Points++;
-				std::cout << "POINT TOTAL: " << m_Points << std::endl;
-
-				m_ShowCaseRuleSetId = rand() % m_ShowCaseTree->GetAmountOfRuleSets();
-				m_ShowCaseIterations = rand() % 3 + 1;
-
-
-				m_ShowCaseTree->SetRuleSet(m_ShowCaseRuleSetId);
-				for (size_t i = 0; i < m_ShowCaseIterations; i++)
-				{
-					m_ShowCaseTree->SetBranchLength(m_ShowCaseTree->GetBranchLength() + 0.5f);
-					m_ShowCaseTree->Generate();
-				}
-
-				m_ShowCaseTree->Initialize();
-			}
-			else
-			{
-				std::cout << std::endl << "========================" << std::endl << "Incorrect Guess" << std::endl;
-				m_Points--;
-				std::cout << "POINT TOTAL: " << m_Points << std::endl;
-
-			}
-		}
 	}
 
 	return true;
@@ -1052,36 +988,6 @@ bool GraphicsClass::RenderScene(const GameContext& context)
 				m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
 		}
 
-		//SHOWCASE TREE
-		for (SimpleObject* object : m_ShowCaseTree->GetBranchModels())
-		{
-
-			object->Render(m_D3D->GetDeviceContext());
-
-			ID3D11ShaderResourceView* textureArr[2];
-			textureArr[0] = m_ShowCaseTree->GetBranchDiffuseTexture();
-			textureArr[1] = m_ShowCaseTree->GetBranchNormalTexture();
-
-			result = m_LightShader->Render(m_D3D->GetDeviceContext(), object->GetIndexCount(), *reinterpret_cast<D3DXMATRIX*>(&object->GetWorldMatrix())
-				, viewMatrix, projectionMatrix,
-				textureArr, m_Light->GetDirection(), m_Light->GetDiffuseColor(), m_Light->GetAmbientColor(), context.camera->GetPosition(),
-				m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
-		}
-
-		for (SimpleObject* object : m_ShowCaseTree->GetLeafModels())
-		{
-
-			object->Render(m_D3D->GetDeviceContext());
-
-			ID3D11ShaderResourceView* textureArr[2];
-			textureArr[0] = m_ShowCaseTree->GetLeafDiffuseTexture();
-			textureArr[1] = m_ShowCaseTree->GetLeafNormalTexture();
-
-			result = m_LightShader->Render(m_D3D->GetDeviceContext(), object->GetIndexCount(), *reinterpret_cast<D3DXMATRIX*>(&object->GetWorldMatrix())
-				, viewMatrix, projectionMatrix,
-				textureArr, m_Light->GetDirection(), m_Light->GetDiffuseColor(), m_Light->GetAmbientColor(), context.camera->GetPosition(),
-				m_Light->GetSpecularColor(), m_Light->GetSpecularPower());
-		}
 
 	}
 

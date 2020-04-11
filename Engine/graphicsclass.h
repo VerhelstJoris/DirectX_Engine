@@ -93,10 +93,7 @@ private:
 	TerrainShaderClass* m_TerrainShader;
 
 	//tree
-	FractalTree* m_FractalTree, *m_ShowCaseTree;
-	int m_ShowCaseRuleSetId = 0;
-	int m_ShowCaseIterations = 0;
-	int m_Points = 0;
+	FractalTree* m_FractalTree;
 
 	ColorShaderClass* m_ColorShader;		//shader for the lines
 
