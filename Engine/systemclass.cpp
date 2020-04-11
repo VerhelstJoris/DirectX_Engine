@@ -5,6 +5,7 @@
 
 #include "SelectEnum.h"
 #include <iostream>
+#include <windows.h>
 
 SystemClass::SystemClass()
 {
@@ -26,14 +27,16 @@ bool SystemClass::Initialize()
 {
 	int x = 0;
 	GraphicsScenes sceneSelect;
-	AllocConsole();
+	AllocConsole();	
+	freopen("CONIN$", "r", stdin);
+	freopen("CONOUT$", "w", stdout);
 
-
-	while (x != 1 && x != 2)
+	do
 	{
 		std::cout << "Please enter what scene to load:" << std::endl
 			<< "	(1) Diorama scene" << std::endl
-			<< "  (2) Procedural Tree scene" << std::endl;
+			<< "	(2) Procedural Tree scene" << std::endl;
+
 		std::cin >> x;
 
 		if (x == 1)
@@ -41,17 +44,14 @@ bool SystemClass::Initialize()
 
 			sceneSelect = GraphicsScenes::DIORAMA;
 		}
-		else if (x == 1)
+		else if (x == 2)
 		{
 			sceneSelect = GraphicsScenes::PROCEDURAL;
 		}
-	}
-
+	} while (x != 1 && x != 2);
 
 	int screenWidth, screenHeight;
 	bool result;
-	AllocConsole();
-	freopen("CONOUT$", "w", stdout);
 
 	// Initialize the width and height of the screen to zero before sending the variables into the function.
 	screenWidth = 0;

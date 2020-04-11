@@ -1,6 +1,4 @@
 
-#ifndef _TEXTURESHADERCLASS_H_
-#define _TEXTURESHADERCLASS_H_
 
 
 //////////////
@@ -75,10 +73,8 @@ private:
 	//
 	float m_Count = 256;
 	float m_Time = 0.0f;
-	float m_Speed = 0.1f;
+	float m_Speed = 4.0f;
 	float m_Brightness = 4.0f;
-	float m_DistortionStrength = 1.2f;
+	float m_DistortionStrength =1.5f;
 	bool m_ToggledOn = true;
 };
-
-#endif

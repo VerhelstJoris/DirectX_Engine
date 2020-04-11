@@ -160,14 +160,22 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd, con
 
 	//controls
 	std::cout << "CAMERA:" << std::endl << "	WASD to move camera, hold Left mouse button and drag mouse to rotate camera" << std::endl;
-	std::cout << "GAME:" << std::endl << "	SPACEBAR to grow the green L-system, N to switch to the next rule set and G to guess" << std::endl;
-	std::cout << "POST-PROCESSING: " << std::endl <<
-		"	NUMPAD 0: Toggle the effect on and off" << std::endl <<
-		"	NUMPAD 1 and 2: increase and decrease the overall brightness" << std::endl <<
-		"	NUMPAD 4 and 5: increase and decrease moving bar speed" << std::endl <<
-		"	NUMPAD 7 and 8: increase and decrease amount of bars" << std::endl <<
-		"	NUMPAD 3 and 6: increase and decrease how distorted the screen is" << std::endl;
+	
+	if (m_SceneSelect == GraphicsScenes::PROCEDURAL)
+	{
+		std::cout << "L-System:" << std::endl << "	SPACEBAR to grow the green L-system, N to switch to the next rule set and G to guess" << std::endl;
+	}
 
+	if (m_SceneSelect == GraphicsScenes::DIORAMA)
+	{
+
+		std::cout << "POST-PROCESSING: " << std::endl <<
+			"	P: Toggle the post-processing effect on and off" << std::endl <<
+			"	NUMPAD 1 and 2: increase and decrease the overall brightness" << std::endl <<
+			"	NUMPAD 4 and 5: increase and decrease moving bar speed" << std::endl <<
+			"	NUMPAD 7 and 8: increase and decrease amount of bars" << std::endl <<
+			"	NUMPAD 3 and 6: increase and decrease how distorted the screen is" << std::endl;
+	}
 
 	m_PostProcessingShader->Toggle();
 
@@ -792,12 +800,12 @@ bool GraphicsClass::Frame(const GameContext& context)
 	{
 		m_PostProcessingShader->IncrementDistortion(false);
 	}
-	if (context.input->IsKeyDown(VK_NUMPAD6))
+	if (context.input->IsKeyDown('I'))
 	{
 		m_PostProcessingShader->IncrementDistortion(true);
 	}
 
-	if (context.input->IsKeypressed(VK_NUMPAD0))
+	if (context.input->IsKeypressed('P'))
 	{
 		m_PostProcessingShader->Toggle();
 	}
