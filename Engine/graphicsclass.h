@@ -24,6 +24,7 @@
 
 
 #include "RenderTexture.h"
+
 //terrain
 #include "terrainclass.h"
 #include "terrainshaderclass.h"
@@ -37,6 +38,7 @@
 #include "PostProcessingShader.h"
 
 #include "Structs.h"
+#include "SelectEnum.h"
 #include <vector>
 
 /////////////
@@ -58,7 +60,7 @@ public:
 	GraphicsClass(const GraphicsClass&);
 	~GraphicsClass();
 
-	bool Initialize(int, int, HWND,const GameContext& context);
+	bool Initialize(int, int, HWND,const GameContext& context, GraphicsScenes sceneSelect);
 	void Shutdown();
 	bool Frame(const GameContext& context);
 
@@ -83,6 +85,8 @@ private:
 	ParticleSystemClass* m_ParticleSystem;
 
 	ResourceLoader m_ResourceLoader;
+
+	GraphicsScenes m_SceneSelect;
 
 	//terrain
 	TerrainClass* m_Terrain;

@@ -127,3 +127,4 @@ struct ModelInfo
 	int vertexCount;
 	int indexCount;
 };
+

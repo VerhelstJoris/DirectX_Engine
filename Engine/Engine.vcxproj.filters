@@ -206,6 +206,9 @@
     <ClInclude Include="SimpleObject.h">
       <Filter>Header Files\Procedural</Filter>
     </ClInclude>
+    <ClInclude Include="SelectEnum.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="lightVS.hlsl">

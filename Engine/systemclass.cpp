@@ -2,7 +2,9 @@
 // Filename: systemclass.cpp
 ////////////////////////////////////////////////////////////////////////////////
 #include "systemclass.h"
-#include "Structs.h"
+
+#include "SelectEnum.h"
+#include <iostream>
 
 SystemClass::SystemClass()
 {
@@ -22,6 +24,30 @@ SystemClass::~SystemClass()
 
 bool SystemClass::Initialize()
 {
+	int x = 0;
+	GraphicsScenes sceneSelect;
+	AllocConsole();
+
+
+	while (x != 1 && x != 2)
+	{
+		std::cout << "Please enter what scene to load:" << std::endl
+			<< "	(1) Diorama scene" << std::endl
+			<< "  (2) Procedural Tree scene" << std::endl;
+		std::cin >> x;
+
+		if (x == 1)
+		{
+
+			sceneSelect = GraphicsScenes::DIORAMA;
+		}
+		else if (x == 1)
+		{
+			sceneSelect = GraphicsScenes::PROCEDURAL;
+		}
+	}
+
+
 	int screenWidth, screenHeight;
 	bool result;
 	AllocConsole();
@@ -36,7 +62,7 @@ bool SystemClass::Initialize()
 
 
 	// Create the graphics object.  This object will handle rendering all the graphics for this application.
-	m_Graphics = new GraphicsClass;
+	m_Graphics = new GraphicsClass();
 	if(!m_Graphics)
 	{
 		return false;
@@ -62,7 +88,7 @@ bool SystemClass::Initialize()
 
 	
 	// Initialize the graphics object.
-	result = m_Graphics->Initialize(screenWidth, screenHeight, m_hwnd, m_GameContext);
+	result = m_Graphics->Initialize(screenWidth, screenHeight, m_hwnd, m_GameContext,sceneSelect);
 	if(!result)
 	{
 		return false;

@@ -124,6 +124,7 @@
     <ClInclude Include="lightclass.h" />
     <ClInclude Include="lightshaderclass.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="SelectEnum.h" />
     <ClInclude Include="SimpleObject.h" />
     <ClInclude Include="orthowindowclass.h" />
     <ClInclude Include="particleshaderclass.h" />

@@ -3,15 +3,19 @@
 ////////////////////////////////////////////////////////////////////////////////
 #include "systemclass.h"
 
+#include "SelectEnum.h"
+#include <iostream>
+
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow)
 {
+	
 	SystemClass* System;
 	bool result;
 	
 	
 	// Create the system object.
-	System = new SystemClass;
+	System = new SystemClass();
 	if(!System)
 	{
 		return 0;
